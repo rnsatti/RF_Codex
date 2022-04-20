@@ -1,0 +1,110 @@
+*** Variables ***
+${login_username}    //*[@name="j_username"]
+${login_password}    //*[@name="j_password"]
+${login_button}    //*[@name="Submit"]
+${selectsalescheck}    //*[@class="DATableNameTxt"]
+${selectsalescheck_value}    Sales partners
+${Tablewait}      //input[@name='TCB_Dealer_Table']
+${enterpriseclick}    //input[@value='0']
+${okclick}        //*[@name="SuOkButton"]
+${submitbutton}    //*[@name="SuSubmitButton"]
+${customerlinkwait}    //*[@src="func/wcs/icons/webclient_start_BSCS_IX_CX.gif"]
+${customerlinkclick}    //*[@class="vtNodeLink"]
+${largeaccountlinkclick}    //*[contains(text(), "Large accounts")]
+${createlargeaccclick}    //*[contains(text(), "Create large account")]
+${rapidlinkclick}    //a[@class="vtLeafLink"]
+${clicktoplevel}    //*[contains(text(), "Create top level")]
+${userheadercheck}    //span[@class="KIBarTxt"]
+${filterclick}    //*[@name="enableGroupSelection"]
+${filterenable}    //*[@name="Enable_Button"]
+${additionalinfoclick}    //*[contains(text(), "Additional information")]
+${ContractsLink}    //tbody/tr[@id='ContractNode']/td[2]/a[1]
+${SearchForContaractsLink}    //a[text()="Search for contract"]
+${Inputcontractcode}    //input[@name='CO_ID_PUB']
+${ContractDrillDown}    //a[@class='DATableTDALinkTxt']
+${FinishButton}    //input[@name='SuFinishButton']
+${ContractOverviewText}    Contract overview
+${AssignAdditionalServicesLink}    //a[contains(text(),'Assign additional services')]
+${SelectServicesText}    Select services
+${ExpandOptionalServices}    //span[text()="Optional Services"]/ancestor::td/ancestor::tr/td[1]/nobr/a
+${InternetCallingPackPostPaid}    //span[text()="Internet Calling Pack-Postpaid"]/ancestor::td/ancestor::tr/ancestor::tbody/ancestor::table/ancestor::td/ancestor::tr/td[1]/input
+#${NextStepButton}    //table[4]//tbody[1]//tr[1]//td[1]//input[1]
+${NextStepButton}    //input[@value="Next step" and @name="SuNextStepButton"]
+${ConfigureServicesText}    Configure services
+${InputQuantity}    //input[@name='COS_QUANTITY']
+${SetQuantityButton}    //input[@name='JSP_CHANGE_QUANTITY_BUTTON']
+${CloseButton}    //input[@name='JSP_CLOSE_BUTTON']
+${ConfigureServicesNextButton}    //table[4]//tbody[1]//tr[1]//td[1]//input[2]
+${ServiceStatusDropdownName}    COS_PENDING_STATUS
+${ServiceStatusDropdownValue}    Active
+${ExpandNetworkLink}    //a[contains(text(),'Network')]
+${SearchForRequestLink}    //a[contains(text(),'Search for network requests')]
+${SuccessfulCheckBox}    //span[text()="Successful"]/ancestor::div/input[3]
+${GetRequestIDValueInitialActivation}    //span[text()="Initial activation of a contract"]/ancestor::td/ancestor::tr/td[2]/span
+${GetRequestIDValueAssignService}    //span[text()="Assign service"]/ancestor::td/ancestor::tr/td[2]/span
+${GetRequestIDValueChangePort}    //span[text()="Change port"]/ancestor::td/ancestor::tr/td[2]/span
+${HSPA_login_username}    //input[@name='sauser']
+${HSPA_login_Password}    //input[@name='password']
+${DetailedReport}    //span[contains(text(),'Detailed Report')]
+${RequestLink}    //a[@href="request_details.jsp?_m="]
+${SearchIcon}     //span[@class='ui-icon ui-icon-search']
+${SearchRequestDropDown}    //td[@class='columns']//select
+${InputRequestID}    //input[@role="textbox" and @class="input-elm"]
+${HSPALoginButton}    //input[@value="Log In"]
+${SearchButton}    //a[@id='fbox_request_details_grid_search']
+${SearchCloseButton}    //div[@id='searchhdfbox_request_details_grid']//span[@class='ui-icon ui-icon-closethick']
+${ResponseCode}    //td[@class="green" and @title="OK"]
+${CSBDStatus}     //td[text()="CSDB"]/following-sibling::td[3]
+${PCRFStatus}     //td[text()="PCRF"]/following-sibling::td[3]
+${SMStatus}       //td[text()="SM"]/following-sibling::td[3]
+${AES_REST1Status}    //tbody/tr[5]/td[text()="AES_REST"]/following-sibling::td[3]
+${AES_REST2Status}    //tbody/tr[6]/td[text()="AES_REST"]/following-sibling::td[3]
+${DPIStatus}      //td[text()="DPI"]/following-sibling::td[@class="green"]
+${AIRStatus}      //td[text()="AIR"]/following-sibling::td[3]
+${AES_RESTStatus}    //td[text()="AES_REST"]/following-sibling::td[3]
+${CISStatus}      //td[text()="CIS"]/following-sibling::td[3]
+${CRM_UserName}    name:SWEUserName
+${CRM_Password}    name:SWEPassword
+${loginButton}    //img[@alt="Login" and @src="images/button.png"]
+${co_codeQuery}    select co_code from contract_all where tmcode=325 and ch_status='a' order by CO_INSTALLED desc
+${bscs_replaceDeviceButton}    //input[@name='JSP_DEVICE_REPLACE_BUTTON']
+${bscs_searchButton}    //input[@name='SearchButton']
+${bscs_simQuery}    select s.SM_SERIALNUM from storage_medium s,port p where s.sm_status='r' and s.sm_id =p.sm_id and p.port_status='r' and p.port_num like '424030%' and p.port_num not in (select port_num from EMCDU.MAT_REQUEST_ALL where status='N' and port_num is not null) and p.dealer_id=-14 and s.dealer_id=-14 and s.smc_id in ('3') order by s.SM_STATUS_MOD_DATE desc
+${inputSimNo}     //input[@name='STMEDNO']
+${bscs_SimSearchButton}    //input[@name='SuSubmitButton']
+${bscs_SimOKButton}    //input[@name='SuOkButton']
+${bscs_reason}    REASON
+${bscs_reasonValue}    replacement
+${CRMlogin}       image:${Replication_Img_Dir}${/}Login.png
+${DeleteImage}    image:${Replication_Img_Dir}${/}Delete.png
+${ToolImage}      image:${Replication_Img_Dir}${/}tool.png
+${compatibility_ipImage}    image:${Replication_Img_Dir}${/}compatibility_ip.png
+${compatibility_ip}    172.24.245.49
+${AddImage}       image:${Replication_Img_Dir}${/}Add.png
+${closeImage}     image:${Replication_Img_Dir}${/}close.png
+${servicesImage}    image:${Replication_Img_Dir}${/}services.png
+${ServiceIDImage}    image:${Replication_Img_Dir}${/}ServiceID.png
+${GoImage}        image:${Replication_Img_Dir}${/}Go.png
+${ContractDrillDownImage}    image:${Replication_Img_Dir}${/}ContractDrillDown.png
+${ForeclosureDetailsImage}    image:${Replication_Img_Dir}${/}ForeclosureDetails.png
+${DatabundleDetailsImage}    image:${Replication_Img_Dir}${/}DatabundleDetails.png
+${pagedown1Image}    image:${Replication_Img_Dir}${/}pagedownTC4.png
+${pagedown2Image}    image:${Replication_Img_Dir}${/}pagedowncheck.png
+${ExternalInfoImage}    image:${Replication_Img_Dir}${/}ExternalInfo.png
+${ExternalInfoDropdownImage}    image:${Replication_Img_Dir}${/}ExternalInfoDropdown.png
+${OffernamecheckImage}    image:${Replication_Img_Dir}${/}offernamecheck.png
+${SelectallImage}    image:${Replication_Img_Dir}${/}selectall.png
+${ClipboardPasteProcess}    ${CURDIR}${/}ClipboardPaste.py
+${QuotaNameImage}    image:${Replication_Img_Dir}${/}QuotaName.png
+${AccountsImage}    image:${Replication_Img_Dir}${/}Accounts.png
+${AccountCodeImage}    image:${Replication_Img_Dir}${/}AccountCode.png
+${NotEmptyCheckImage}    image:${Replication_Img_Dir}${/}NotEmptyCheck.png
+${ContractImage}    image:${Replication_Img_Dir}${/}Contract.png
+${CopyImage}      image:${Replication_Img_Dir}${/}copy.png
+${RateplanImage}    image:${Replication_Img_Dir}${/}Rateplan.png
+${AccountnameImage}    image:${Replication_Img_Dir}${/}Accountname.png
+${pagedownCheck3Image}    image:${Replication_Img_Dir}${/}pagedowncheck1.png
+${ServicesAndInstalledAssetsImage}    image:${Replication_Img_Dir}${/}ServicesAndInstalledAssets.png
+${productImage}    image:${Replication_Img_Dir}${/}product.png
+${FileImage}      image:${Replication_Img_Dir}${/}File.png
+${LogoutImage}    image:${Replication_Img_Dir}${/}Logout.png

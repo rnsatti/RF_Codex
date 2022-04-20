@@ -1,0 +1,12 @@
+{
+"Configurator": [
+                    	{
+				"Environment":  "Production",
+				"URL": "https://myaccount.du.ae/servlet/myaccount/en/home.html",
+				"jiraurl": "http://172.24.245.181:8282",
+				"jirauname": "vishakha.deshpande",
+				"jirapwd": "welcome@123",
+				"testplankey": "QAD-50225"	  
+			}
+                 ]
+}

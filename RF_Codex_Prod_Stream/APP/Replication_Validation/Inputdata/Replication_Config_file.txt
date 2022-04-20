@@ -1,0 +1,26 @@
+{
+	"Configurator": [
+		{
+			"Environment": "Regression",
+			"URL": "https://172.24.244.68:9002/en",
+			"BackOffice_URL" : "https://172.24.244.68:9002/backoffice/login.zul",
+			"BackOffice_username": "admin",
+			"BackOffice_password": "nimda",
+			"modulename": "MOBUATB",
+			"username_db": "sitread",
+			"pwd_db": "sitread",
+			"host": "172.24.247.8",
+			"port": "1521",
+			"host_server": "172.24.245.8",
+			"username_server": "billread",
+			"pwd_server": "bIllread!23",
+			"dtnr_url": "http://172.24.245.8:8321/DTNR/validateLogin.jsp",
+			"dtnrusername_value": "TEST",
+			"dtnrpassword_value": "Bis@2014",
+			"jiraurl": "http://172.24.245.181:8282",
+			"jirauname": "naveen.sivasankaran",
+			"jirapwd": "welcome123",
+			"testplankey": "QAD-44439"
+		}
+	]
+}

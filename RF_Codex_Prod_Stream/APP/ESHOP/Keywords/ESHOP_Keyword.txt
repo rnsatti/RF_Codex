@@ -1,0 +1,193 @@
+*** Settings ***
+Library           RPA.Browser.Selenium
+Library           BuiltIn
+Library           DateTime
+Resource          ../Config/Resources.txt
+Resource          ../Locators/Eshop_Locators.txt
+Resource          ../../CommonResources/Setup_TearDown.txt
+
+*** Keywords ***
+Take_Screenshot
+    ${dateTimeStampScreenshot}    Get Current Date    result_format=%d-%m-%Y-%H-%M-%S
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-${TEST NAME}-${dateTimeStampScreenshot}.png
+
+ESHOP_VariableValueRetreive
+    ${Eshop_URL}    Set Variable    ${testData['URL']}
+    Set Global Variable    ${Eshop_URL}
+    ${Product_Name}    Set Variable    ${testData['ProductName']}
+    Set Global Variable    ${Product_Name}
+    ${Rate_Plan}    Set Variable    ${testData['RatePlan']}
+    Set Global Variable    ${Rate_Plan}
+    ${Email}    Set Variable    ${testData['Email']}
+    Set Global Variable    ${Email}
+    ${Phone}    Set Variable    ${testData['Phone']}
+    Set Global Variable    ${Phone}
+    ${EmiratesId}    Set Variable    ${testData['EmiratesId']}
+    Set Global Variable    ${EmiratesId}
+    ${First_Name}    Set Variable    ${testData['First_Name']}
+    Set Global Variable    ${First_Name}
+    ${Birth_Date}    Set Variable    ${testData['Birth_Date']}
+    Set Global Variable    ${Birth_Date}
+    ${Expiry_Date}    Set Variable    ${testData['Expiry_Date']}
+    Set Global Variable    ${Expiry_Date}
+    ${Full_Address}    Set Variable    ${testData['Full_Address']}
+    Set Global Variable    ${Full_Address}
+
+ESHOP_Open_Browser
+    [Arguments]    ${url}
+    Comment    Open Chrome Browser    ${url}    options=add_extension("./lhobafahddgcelffkeicbaginigeejlf.crx")
+    #open browser    @{config_URL}    headlesschrome
+    Open Browser    ${url}    chrome    options=add_argument("headless"); add_argument("--disable-infobars"); add_argument("--disable-dev-shm-usage"); add_argument("--no-sandbox"); add_argument("--remote-debugging-port=9222");add_argument('--ignore-ssl-errors=yes');add_argument('--ignore-certificate-errors')
+    Maximize Browser Window
+    Delete All Cookies
+    Delete All Sessions
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Home_Screen.png
+
+ESHOP_Close_Browsers
+    Close All Browsers
+
+ESHOP_Check_Product
+    [Arguments]    ${product_name}
+    ${product_status}    Run Keyword and Return Status    Wait Until Page Contains    ${product_name}    30s
+    IF    ${product_status}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-${product_name}.png
+    Log    ${product_name} found.
+    ELSE
+    Log    ${product_name} not found.
+    BuiltIn.Fail
+    END
+
+ESHOP_Check_Postpaid_Plan
+    [Arguments]    ${rate_plan}
+    ${rate_plan_status}    Run Keyword and Return Status    Wait Until Page Contains    ${rate_plan}    30s
+    IF    ${rate_plan_status}
+    Execute Javascript    window.scrollTo(0,300);
+    Wait Until Element Is Visible    ${see_plan_details}    10s
+    Click Element    ${see_plan_details}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-${rate_plan}.png
+    Log    ${rate_plan} found.
+    END
+
+ESHOP_Check_Prepaid_Plan
+    [Arguments]    ${rate_plan}
+    ${rate_plan_status}    Run Keyword and Return Status    Wait Until Page Contains    ${rate_plan}    30s
+    IF    ${rate_plan_status}
+    Scroll Element Into View    ${buy_now_btn}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-${rate_plan}.png
+    Log    ${rate_plan} found.
+    END
+
+ESHOP_Buy_Plan
+    ${buy_now_btn}    Run Keyword and Return Status    Wait Until Element Is Visible    (//button[contains(@class,"theme--light")]/span[text()="Buy now"])[1]    30s
+    IF    ${buy_now_btn}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Buy_Plan.png
+    Click Element    (//button[contains(@class,"theme--light")]/span[text()="Buy now"])[1]
+    END
+
+ESHOP_Add_To_Cart
+    ${add_to_cart_btn_check}    Run Keyword and Return Status    Wait Until Element Is Visible    ${add_to_cart_btn}    30s
+    IF    ${add_to_cart_btn_check}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Add_To_Cart.png
+    ESHOP_Survey_Popup
+    Click Element When Visible    ${add_to_cart_btn}
+    END
+
+ESHOP_Your_Cart
+    ${your_cart_title}    Run Keyword and Return Status    Wait Until Page Contains Element    ${your_cart}    30s
+    IF    ${your_cart_title}
+    Comment    ${items_count}    Get Text    ${item_count}
+    Comment    Log    ${items_count} in your cart.
+    Comment    ${AED}    Get Text    ${AED_amt}
+    Comment    Log    AED ${AED}
+    Execute Javascript    window.scrollTo(0,1000);
+    Wait Until Element Is Visible    ${cart_confirm_btn}    10s
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Your_Cart.png
+    Click Element    ${cart_confirm_btn}
+    END
+
+ESHOP_Home
+    [Arguments]    ${main_link}    ${sub_link}
+    ${ele_status}    Run Keyword and Return Status    Wait Until Page Contains Element    ${main_link}    20s
+    IF    ${ele_status}
+    Click Element    ${main_link}
+    Wait Until Element Is Visible    ${sub_link}    10s
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Home.png
+    Click Element    ${sub_link}
+    END
+
+ESHOP_Select_Postpaid_Plan
+    [Arguments]    ${rate_plan}    ${glide_btn}=none
+    ${choose_plan_title}    Run Keyword and Return Status    Wait Until Page Contains Element    //h4[contains(text(),"Choose a Power Plan.")]    20s
+    IF    ${choose_plan_title}
+    ESHOP_Survey_Popup
+    Execute Javascript    window.scrollTo(0,500);
+    Run Keyword If    '${glide_btn}'!='none'    Click Element When Visible    ${glide_btn}
+    Click Element When Visible    ${rate_plan}
+    BuiltIn.Sleep    0.5s
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Postpaid_Plan.png
+    ESHOP_Add_To_Cart
+    END
+
+ESHOP_Order_Summary
+    ${your_details_title}    Run Keyword and Return Status    Wait Until Page Contains Element    ${your_details}    20s
+    IF    ${your_details_title}
+    ESHOP_Contact_Information
+    ESHOP_Confirm_EmirateID_Details
+    ESHOP_Delivery_Address
+    BuiltIn.Sleep    1s
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Order_Summary.png
+    Comment    ${continue_btn}    Run Keyword And Return Status    Wait Until Page Contains Element    (//button[contains(text(),"Continue")])[1]    20s
+    Comment    Run Keyword If    ${continue_btn}    Click Element    (//button[contains(text(),"Continue")])[1]
+    END
+
+ESHOP_Details_Match_EmirateID
+    ${yes_match_btn_check}    Run Keyword and Return Status    Wait Until Element Is Visible    ${yes_match_btn}    20s
+    IF    ${yes_match_btn_check}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Yes_Match_Popup.png
+    Click Element When Visible    ${yes_match_btn}
+    END
+
+ESHOP_Survey_Popup
+    ${no_thanks_btn_check}    Run Keyword And Return Status    Wait Until Element Is Visible    ${no_thanks_btn}    10s
+    Run Keyword If    ${no_thanks_btn_check}    Click Element    ${no_thanks_btn}
+
+ESHOP_Delivery_Address
+    ${delivery_address}    Run Keyword and Return Status    Wait Until Element Is Visible    ${delivery_details_title}    20s
+    IF    ${delivery_address}
+    Execute Javascript    window.scrollTo(0,1000);
+    Scroll Element Into View    //label[@for="checkDqFlag"]
+    Input Text    ${full_address_field}    ${Full_Address}
+    Select From List By Value    emirates    AE-AZ
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Delivery_Address.png
+    Comment    Scroll Element Into View    //label[@for="checkDqFlag"]
+    Execute Javascript    window.scrollTo(0,2000);
+    Click Element    ${my_emirates_checkbox}
+    ESHOP_Details_Match_EmirateID
+    END
+
+ESHOP_Confirm_EmirateID_Details
+    ${emirateID_title}    Run Keyword And Return Status    Wait Until Page Contains Element    ${confirm_emirate_details_title}    20s
+    IF    ${emirateID_title}
+    Scroll Element Into View    ${delivery_details_title}
+    BuiltIn.Sleep    0.5s
+    ${emirate_id_number}    Get WebElement    ${emirates_num_field}
+    Execute Javascript    arguments[0].value='${EmiratesId}'    ARGUMENTS    ${emirate_id_number}
+    Input Text    ${first_name_field}    ${First_Name}
+    Select From List By Label    nationality    Afghanistan
+    Select From List By Value    gender    MALE
+    ${expiry_date_locator}    Get WebElement    ${expiry_date_field}
+    Comment    Execute Javascript    arguments[0].value='${Expiry_Date}'    ARGUMENTS    ${expiry_date_locator}
+    Execute Javascript    arguments[0].value='11/11/2025'    ARGUMENTS    ${expiry_date_locator}
+    ${date_of_birth}    Get WebElement    ${date_of_birth_field}
+    Comment    Execute Javascript    arguments[0].value='${Birth_Date}'    ARGUMENTS    ${date_of_birth}
+    Execute Javascript    arguments[0].value='11/11/1988'    ARGUMENTS    ${date_of_birth}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Emirates_ID_Details.png
+    END
+
+ESHOP_Contact_Information
+    ${email_field_check}    Run Keyword and Return Status    Wait Until Element Is Visible    ${email_field}    10s
+    IF    ${email_field_check}
+    Input Text    ${email_field}    ${Email}
+    Input Text    ${phone_field}    +${Phone}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Contact_Information.png
+    END

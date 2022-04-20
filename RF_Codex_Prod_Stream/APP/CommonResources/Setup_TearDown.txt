@@ -1,0 +1,1413 @@
+*** Settings ***
+Library           Collections
+Library           DateTime
+Library           OperatingSystem
+Library           Process
+Library           RPA.Archive
+Resource          ../CommonResources/Resources.txt    #Library | ../CustomLibrary/Zip Directory.py
+Library           String
+Library           RPA.Excel.Files
+Library           RPA.Tables
+Library           RPA.JSON
+Resource          Setup_TearDown.txt
+Library           RequestsLibrary
+
+*** Variables ***
+${A1}             ${1}
+${a}              ${0}
+${b}              ${0}
+${executionname}    ${EMPTY}
+${flag}           Y
+
+*** Keywords ***
+ArchiveFile
+    ${dateTimeStampResultFolder}    Get Current Date    result_format=%d-%m-%Y-%H-%M-%S
+    #####    CHECK PREVIOUS BUILD RESULT    FILE IS PRESENT IF PRESENT    REMOVE THE FILE AND MOVE    THE ZIPPED FILE TO ARCHIVE    FOLDERS
+    ${path}    Set Variable    ${CURDIR}/../../ResultFile/Result
+    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    ${countDirectories}    OperatingSystem.Count Directories In Directory    ${CURDIR}/../../ResultFile/Result
+    ${countFilesRobotLogs}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    @{fileList}    Run Keyword If    '${countFiles}'>='1'    OperatingSystem.List Files In Directory    ${CURDIR}/../../ResultFile/Result
+    ${fileName}    Run Keyword If    '${countFiles}'>='1'    Set Variable    @{fileList}
+    Comment    ${timeStamp_RobotLogs_Archiving}    Run Keyword If    '${countFiles}'>='1'    remove string    ${fileName}    Result_    .zip
+    Run Keyword If    '${countFilesRobotLogs}'>='1'    Archive Folder With Zip    ${CURDIR}/../../ResultFile/Result    ${CURDIR}/../../ResultFile/Result/${SUITE NAME.rsplit('.')[-1]}-Result-${dateTimeStampResultFolder} .zip    sub_directories=True
+    Run Keyword And Ignore Error    Run Keyword If    '${countFilesRobotLogs}'>='1'    Remove Files    ${path}/*.html    ${path}/*.txt    ${path}/*.png    ${path}/*.webm
+
+BSCS_MoveFileToArchive
+    ${sourcefile}    Set Variable    ${CURDIR}/../../ResultFile/Result/*.zip
+    ${destinationpath}    Set Variable    ${CURDIR}/../../Archive
+    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    Run Keyword If    '${countFiles}'>='1'    OperatingSystem.Move Files    ${sourcefile}    ${destinationpath}
+    UpdateXrayFiletoDefault
+    BSCS_JiraConfigValue
+    BSCS_ExecutorUpdateTestsFromJira
+    BSCS_ExecutorExcel_Setup
+
+BSCS_JiraConfigValue
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../BSCS/Inputdata/BSCS_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{jiraurl}=    Get values from JSON    ${config}    $.Configurator[*].jiraurl
+    @{jirauname}=    Get values from JSON    ${config}    $.Configurator[*].jirauname
+    @{jirapwd}=    Get values from JSON    ${config}    $.Configurator[*].jirapwd
+    @{testplankey}=    Get values from JSON    ${config}    $.Configurator[*].testplankey
+    ${jiraurl}=    Convert To String    @{jiraurl}
+    ${jirauname}=    Convert To String    @{jirauname}
+    ${jirapwd}=    Convert To String    @{jirapwd}
+    ${testplankey}=    Convert To String    @{testplankey}
+    Set Global Variable    ${jiraurl}
+    Set Global Variable    ${jirauname}
+    Set Global Variable    ${jirapwd}
+    Set Global Variable    ${testplankey}
+    ${xrayjsonpath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${xrayjson}    Load JSON from file    ${xrayjsonpath}
+    ${latestJson}    Update value to JSON    ${xrayjson}    $..testPlanKey    ${testplankey}
+    Save JSON to file    ${latestJson}    ${xrayjsonpath}
+
+BSCS_ExecutorExcel_Setup
+    ${executor}    OperatingSystem.Get File    ${CURDIR}/../BSCS/Inputdata/BSCS_Executor.json
+    Comment    &{values}=    Convert string to JSON    ${executor}
+    @{names}=    Get values from JSON    ${executor}    $.tests[*].key
+    ${exec_env}=    Get values from JSON    ${executor}    $..Environment
+    ${exec_env}    Convert To String    ${exec_env}
+    ${exec_env_cnt}=    Get length    ${exec_env}
+    #Log    ${exec_env}[0]
+    #Log    ${exec_env}[1]
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../BSCS/Inputdata/BSCS_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    ${config_env}=    Get values from JSON    ${config}    $.Configurator[*].Environment
+    Comment    ${config_env_cnt}=    Get length    ${config_env}
+    #Log    ${config_env}[0]
+    #Log    ${config_env}[1]
+    #Log    ${config_env_cnt}
+    Log Many    ${config_env}
+    Comment    ${config_env}=    Convert To String    @{config_env}
+    Log Many    @{names}
+    FOR    ${names}    IN    @{names}
+    log    ${names}
+    log    ${A1}
+    RPA.Excel.Files.Open workbook    ${BSCS_EXCEL_FILE}
+    ${worksheet}=    Read worksheet    header=${TRUE}
+    Comment    ${rows}=    Get Length    ${worksheet}
+    ${testcases}=    Create table    ${worksheet}
+    ${testcases_todo}=    Read Worksheet As Table    header=True
+    ${c}    Set Variable    2
+    log    ${c}
+    FOR    ${testcases_data}    IN    @{testcases_todo}
+    log    ${names}
+    Log    ${testcases_data}
+    ${testcase_name}    Set Variable    ${testcases_data}[JiraID]
+    Log    ${testcase_name}
+    Log    ${names}
+    IF    "${names}" == "${testcase_name}"
+    Log    ${names}
+    Set Worksheet Value    ${c}    A    Y
+    log    ${config_env}
+    #log    ${exec_env}[0]
+    #log    ${b}
+    ${b}    Set Variable    ${0}
+    FOR    ${config_envi}    IN    ${config_env}
+        IF    "${exec_env}" == "${config_envi}"
+        Log    ${config_envi}
+        @{config_url}=    Get values from JSON    ${config}    $.Configurator[${b}].URL
+        @{config_username}=    Get values from JSON    ${config}    $.Configurator[${b}].username
+        @{config_password}=    Get values from JSON    ${config}    $.Configurator[${b}].password
+        @{config_modulename}=    Get values from JSON    ${config}    $.Configurator[${b}].modulename
+        @{config_username_db}=    Get values from JSON    ${config}    $.Configurator[${b}].username_db
+        @{config_pwd_db}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_db
+        @{config_host}=    Get values from JSON    ${config}    $.Configurator[${b}].host
+        @{config_port}=    Get values from JSON    ${config}    $.Configurator[${b}].port
+        @{config_pwd_server}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_server
+        @{config_username_server}=    Get values from JSON    ${config}    $.Configurator[${b}].username_server
+        @{config_host_server}=    Get values from JSON    ${config}    $.Configurator[${b}].host_server
+        @{config_dtnrurl}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnr_url
+        @{config_dtnrusername}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnrusername_value
+        @{config_dtnrpwd}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnrpassword_value
+        Set Worksheet Value    ${c}    D    @{config_url}
+        Set Worksheet Value    ${c}    E    @{config_username}
+        Set Worksheet Value    ${c}    F    @{config_password}
+        Set Worksheet Value    ${c}    G    @{config_modulename}
+        Set Worksheet Value    ${c}    H    @{config_username_db}
+        Set Worksheet Value    ${c}    I    @{config_pwd_db}
+        Set Worksheet Value    ${c}    J    @{config_host}
+        Set Worksheet Value    ${c}    K    @{config_port}
+        Set Worksheet Value    ${c}    L    @{config_host_server}
+        Set Worksheet Value    ${c}    M    @{config_username_server}
+        Set Worksheet Value    ${c}    N    @{config_pwd_server}
+        Set Worksheet Value    ${c}    O    @{config_dtnrurl}
+        Set Worksheet Value    ${c}    P    @{config_dtnrusername}
+        Set Worksheet Value    ${c}    Q    @{config_dtnrpwd}
+        log    ${b}
+    END
+    log    ${b}
+    ${b}=    Evaluate    ${b} + 1
+    END
+    END
+    ${c}=    Evaluate    ${c} + 1
+    RPA.Excel.Files.Save Workbook    ${BSCS_EXCEL_FILE}
+    END
+    ${a}=    Evaluate    ${a} + 1
+    END
+
+TestStatusUpdateJson
+    ${xrayjsonpath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${Status}    Set Variable    ${TEST_STATUS}
+    log    ${Status}
+    ${testkey}    Set Variable    @{TEST_TAGS}
+    log    ${testkey}
+    ${updatedStatus}    Run keyword if    '${Status}'=='PASS'    Create Dictionary    testKey=${testkey}    status=${Status}
+    Comment    Convert To List    ${updatedStatus}
+    Comment    &{updatedictt}    Copy Dictionary    &{updatedictt}    ${updatedStatus}
+    Comment    Append To List    ${updatelist}    ${updatedStatus}
+    Comment    &{updatefinaljson}    Copy Dictionary    ${updatedStatus}
+    Comment    log    &{updatefinaljson}
+    Run keyword if    '${Status}'=='PASS'    log    ${updatedStatus}
+    ${xrayjson}    Run keyword if    '${Status}'=='PASS'    Load JSON from file    ${xrayjsonpath}
+    ${latestJson}    Run keyword if    '${Status}'=='PASS'    Add to JSON    ${xrayjson}    $..tests    ${updatedStatus}
+    Run keyword if    '${Status}'=='PASS'    Save JSON to file    ${latestJson}    ${xrayjsonpath}
+    Run Keyword If    '${Status}'=='FAIL'    JiraIssueData
+
+XrayResultsUpload
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    http://172.24.245.181:8282
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${xrayJsonPath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${request}    Load JSON from file    ${xrayJsonPath}
+    ${request}    Replace Variables    ${request}
+    ${request}    Convert JSON to String    ${request}
+    ${request}    Replace String    ${request}    '    "
+    ${request}    Convert String to JSON    ${request}
+    Log    ${request}
+    ${response}    Post Request    alias    /rest/raven/1.0/import/execution    ${request}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    Run Keyword If    "${status}"=="200"    ArchiveFile
+
+JiraIssueCreation
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    http://172.24.245.181:8282
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8    Accept=application/json
+    ${JiraIssuefilepath}    Set Variable    ${CURDIR}/../CommonResources/JiraIssuefile.json
+    ${request}    Load JSON from file    ${JiraIssuefilepath}
+    ${request}    Replace Variables    ${request}
+    Log    ${request}
+    ${response}    Post Request    alias    /rest/api/2/issue    ${request}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${jsonresponse}    To Json    ${response.text}
+    ${issueID}    Get value from JSON    ${jsonresponse}    $..key
+    log    ${issueID}
+    ${issueID}    Create List    ${issueID}
+    ${xrayjsonpath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${Status}    Set Variable    ${TEST_STATUS}
+    log    ${Status}
+    ${testkey}    Set Variable    @{TEST_TAGS}
+    log    ${testkey}
+    ${updatedStatus}    Create Dictionary    testKey=${testkey}    status=${Status}    defects=${issueID}
+    Comment    Append To List    ${updatelist}    ${updatedStatus}
+    Comment    &{updatefinaljson}    Copy Dictionary    ${updatedStatus}
+    Comment    log    &{updatefinaljson}
+    ${xrayjson}    Load JSON from file    ${xrayjsonpath}
+    ${latestJson}    Add to JSON    ${xrayjson}    $..tests    ${updatedStatus}
+    log    ${latestJson}
+    Save JSON to file    ${latestJson}    ${xrayjsonpath}
+
+UpdateXrayFiletoDefault
+    #removing file
+    Remove File    ${CURDIR}/../CommonResources/xray.json
+    #adding core file again to
+    Copy File    ${CURDIR}/../CommonResources/corexrayfile.json    ${CURDIR}/../CommonResources/xray.json
+
+JiraIssueData
+    log    ${TEST_NAME}
+    log    ${TEST_MESSAGE}
+    log    @{TEST_TAGS}
+    ${jiradatapath}    Set Variable    ${CURDIR}/../CommonResources/JiraIssuefile.json
+    ${jirajson}    Load JSON from file    ${jiradatapath}
+    ${updateSummary}    Update value to JSON    ${jirajson}    $..fields.summary    ${TEST_NAME}
+    ${updateDescription}    Update value to JSON    ${jirajson}    $..fields.description    ${TEST_MESSAGE}
+    Comment    ${issuelinkkey}    Update value to JSON    ${jirajson}    $.update.issuelinks[0].outwardIssue.key    @{TEST_TAGS}
+    Save JSON to file    ${jirajson}    ${jiradatapath}
+    Run Keyword If    '${TEST_STATUS}'=='FAIL'    JiraIssueCreation
+
+BSCS_ExecutorUpdateTestsFromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    /rest/raven/1.0/api/testplan/${testplankey}/test    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    Set Variable    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../BSCS/Inputdata/BSCS_Executor.json
+    ${updatetestcases}    Load JSON from file    ${executorpath}
+    ${latesttestcases}    Update value to JSON    ${updatetestcases}    $..tests    ${response}
+    Save JSON to file    ${latesttestcases}    ${executorpath}
+    Run Keyword If    "${status}"=="200"    BSCS_ExecutorUpdateEnvfromJira
+
+BSCS_ExecutorUpdateEnvfromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    rest/api/2/issue/${testplankey}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    To Json    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../BSCS/Inputdata/BSCS_Executor.json
+    ${executorfile}    Load JSON from file    ${executorpath}
+    ${environment}    Get value from JSON    ${response}    $..fields.customfield_10224[0]
+    ${environment}    Update value to JSON    ${executorfile}    $..Environment    ${environment}
+    Save JSON to file    ${executorfile}    ${executorpath}
+
+DSP_MoveFileToArchive
+    ${sourcefile}    Set Variable    ${CURDIR}/../../ResultFile/Result/*.zip
+    ${destinationpath}    Set Variable    ${CURDIR}/../../Archive
+    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    Run Keyword If    '${countFiles}'>='1'    OperatingSystem.Move Files    ${sourcefile}    ${destinationpath}
+    UpdateXrayFiletoDefault
+    #DSP_JiraConfigValue
+    #DSP_ExecutorUpdateTestsFromJira
+    DSP_ExecutorExcel_Setup
+
+DSP_ExecutorExcel_Setup
+    ${executor}    OperatingSystem.Get File    ${CURDIR}/../DSP/Inputdata/DSP_Executor.json
+    &{values}=    Convert string to JSON    ${executor}
+    @{names}=    Get values from JSON    ${values}    $.tests[*].key
+    ${exec_env}=    Get values from JSON    ${values}    $..Environment
+    ${exec_env_cnt}=    Get length    ${exec_env}
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../DSP/Inputdata/DSP_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{config_env}=    Get values from JSON    ${config}    $.Configurator[*].Environment
+    ${config_env_cnt}=    Get length    ${config_env}
+    Log Many    @{config_env}
+    ${config_env}=    Convert To String    @{config_env}
+    Log Many    @{names}
+    FOR    ${name}    IN    @{names}
+    log    ${name}
+    log    ${A1}
+    @{dict}=    read csv file to associative    ${DSP_EXCEL_FILE}
+    log many    ${dict}
+    ${dictlen}=    Get length    ${dict}
+    ${i}    Set Variable    1
+    FOR    ${i}    IN RANGE    ${dictlen}
+        log    ${dict[${i}]['Flag']}
+        log    ${dict[${i}]['JiraID']}
+        log    ${dict[${i}]['TestcaseID']}
+        IF    '${dict[${i}]['JiraID']}'=='${name}'
+        set to dictionary    ${dict[${i}]}    Flag    Y
+        log many    ${dict[${i}]}
+        csv file from associative    ${DSP_EXCEL_FILE}    ${dict}
+    END
+    END
+    END
+    FOR    ${config_envi}    IN    ${config_env}
+        IF    "${exec_env}[${a}]" == "${config_envi}"
+        Log    ${config_envi}
+        @{modulename}=    Get values from JSON    ${config}    $.Configurator[${b}].modulename
+        Set Global Variable    ${modulename}
+        @{username_db}=    Get values from JSON    ${config}    $.Configurator[${b}].username_db
+        Set Global Variable    ${username_db}
+        @{pwd_db}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_db
+        Set Global Variable    ${pwd_db}
+        @{host}=    Get values from JSON    ${config}    $.Configurator[${b}].host
+        Set Global Variable    ${host}
+        @{port}=    Get values from JSON    ${config}    $.Configurator[${b}].port
+        Set Global Variable    ${port}
+        @{pwd_server}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_server
+        Set Global Variable    ${pwd_server}
+        @{username_server}=    Get values from JSON    ${config}    $.Configurator[${b}].username_server
+        Set Global Variable    ${username_server}
+        @{host_server}=    Get values from JSON    ${config}    $.Configurator[${b}].host_server
+        Set Global Variable    ${host_server}
+        @{database}=    Get values from JSON    ${config}    $.Configurator[${b}].database
+        Set Global Variable    ${database}
+        @{routerno}=    Get values from JSON    ${config}    $.Configurator[${b}].routerno
+        Set Global Variable    ${routerno}
+        log    ${b}
+    END
+    log    ${b}
+    ${b}=    Evaluate    ${b} + 1
+    ${a}=    Evaluate    ${a} + 1
+    END
+
+DSP_ExecutorUpdateTestsFromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    /rest/raven/1.0/api/testplan/${testplankey}/test    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    Set Variable    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../DSP/Inputdata/DSP_Executor.json
+    ${updatetestcases}    Load JSON from file    ${executorpath}
+    ${latesttestcases}    Update value to JSON    ${updatetestcases}    $..tests    ${response}
+    Save JSON to file    ${latesttestcases}    ${executorpath}
+    Run Keyword If    "${status}"=="200"    DSP_ExecutorUpdateEnvfromJira
+
+DSP_ExecutorUpdateEnvfromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    rest/api/2/issue/${testplankey}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    To Json    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../DSP/Inputdata/DSP_Executor.json
+    ${executorfile}    Load JSON from file    ${executorpath}
+    ${environment}    Get value from JSON    ${response}    $..fields.customfield_10224[0]
+    ${environment}    Update value to JSON    ${executorfile}    $..Environment    ${environment}
+    Save JSON to file    ${executorfile}    ${executorpath}
+
+DSP_JiraConfigValue
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../DSP/Inputdata/DSP_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{jiraurl}=    Get values from JSON    ${config}    $.Configurator[*].jiraurl
+    @{jirauname}=    Get values from JSON    ${config}    $.Configurator[*].jirauname
+    @{jirapwd}=    Get values from JSON    ${config}    $.Configurator[*].jirapwd
+    @{testplankey}=    Get values from JSON    ${config}    $.Configurator[*].testplankey
+    ${jiraurl}=    Convert To String    @{jiraurl}
+    ${jirauname}=    Convert To String    @{jirauname}
+    ${jirapwd}=    Convert To String    @{jirapwd}
+    ${testplankey}=    Convert To String    @{testplankey}
+    Set Global Variable    ${jiraurl}
+    Set Global Variable    ${jirauname}
+    Set Global Variable    ${jirapwd}
+    Set Global Variable    ${testplankey}
+    ${xrayjsonpath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${xrayjson}    Load JSON from file    ${xrayjsonpath}
+    ${latestJson}    Update value to JSON    ${xrayjson}    $..testPlanKey    ${testplankey}
+    Save JSON to file    ${latestJson}    ${xrayjsonpath}
+
+SFA_MoveFileToArchive
+    ${sourcefile}    Set Variable    ${CURDIR}/../../ResultFile/Result/*.zip
+    ${destinationpath}    Set Variable    ${CURDIR}/../../Archive
+    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    Run Keyword If    '${countFiles}'>='1'    OperatingSystem.Move Files    ${sourcefile}    ${destinationpath}
+    UpdateXrayFiletoDefault
+    SFA_JiraConfigValue
+    SFA_ExecutorUpdateTestsFromJira
+    SFA_ExecutorExcel_Setup
+
+SFA_JiraConfigValue
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../SFA/Inputdata/SFA_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{jiraurl}=    Get values from JSON    ${config}    $.Configurator[*].jiraurl
+    @{jirauname}=    Get values from JSON    ${config}    $.Configurator[*].jirauname
+    @{jirapwd}=    Get values from JSON    ${config}    $.Configurator[*].jirapwd
+    @{testplankey}=    Get values from JSON    ${config}    $.Configurator[*].testplankey
+    ${jiraurl}=    Convert To String    @{jiraurl}
+    ${jirauname}=    Convert To String    @{jirauname}
+    ${jirapwd}=    Convert To String    @{jirapwd}
+    ${testplankey}=    Convert To String    @{testplankey}
+    Set Global Variable    ${jiraurl}
+    Set Global Variable    ${jirauname}
+    Set Global Variable    ${jirapwd}
+    Set Global Variable    ${testplankey}
+    ${xrayjsonpath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${xrayjson}    Load JSON from file    ${xrayjsonpath}
+    ${latestJson}    Update value to JSON    ${xrayjson}    $..testPlanKey    ${testplankey}
+    Save JSON to file    ${latestJson}    ${xrayjsonpath}
+
+SFA_ExecutorUpdateTestsFromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    /rest/raven/1.0/api/testplan/${testplankey}/test    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    Set Variable    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../SFA/Inputdata/SFA_Executor.json
+    ${updatetestcases}    Load JSON from file    ${executorpath}
+    ${latesttestcases}    Update value to JSON    ${updatetestcases}    $..tests    ${response}
+    Save JSON to file    ${latesttestcases}    ${executorpath}
+    Run Keyword If    "${status}"=="200"    SFA_ExecutorUpdateEnvfromJira
+
+SFA_ExecutorExcel_Setup
+    ${executor}    OperatingSystem.Get File    ${CURDIR}/../SFA/Inputdata/SFA_Executor.json
+    &{values}=    Convert string to JSON    ${executor}
+    @{names}=    Get values from JSON    ${values}    $.tests[*].key
+    ${exec_env}=    Get values from JSON    ${values}    $..Environment
+    ${exec_env_cnt}=    Get length    ${exec_env}
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../SFA/Inputdata/SFA_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{config_env}=    Get values from JSON    ${config}    $.Configurator[*].Environment
+    ${config_env_cnt}=    Get length    ${config_env}
+    Log Many    @{config_env}
+    ${config_env}=    Convert To String    @{config_env}
+    Log Many    @{names}
+    FOR    ${name}    IN    @{names}
+    log    ${name}
+    log    ${A1}
+    @{dict}=    read csv file to associative    ${SFA_EXCEL_FILE}
+    log many    ${dict}
+    ${dictlen}=    Get length    ${dict}
+    ${i}    Set Variable    1
+    FOR    ${i}    IN RANGE    ${dictlen}
+        log    ${dict[${i}]['Flag']}
+        log    ${dict[${i}]['JiraID']}
+        log    ${dict[${i}]['TestcaseID']}
+        IF    '${dict[${i}]['JiraID']}'=='${name}'
+        set to dictionary    ${dict[${i}]}    Flag    Y
+        log many    ${dict[${i}]}
+        csv file from associative    ${SFA_EXCEL_FILE}    ${dict}
+    END
+    END
+    END
+    FOR    ${config_envi}    IN    ${config_env}
+        IF    "${exec_env}[${a}]" == "${config_envi}"
+        Log    ${config_envi}
+        @{config_modulename}=    Get values from JSON    ${config}    $.Configurator[${b}].modulename
+        Set Global Variable    ${config_modulename}
+        @{config_username_db}=    Get values from JSON    ${config}    $.Configurator[${b}].username_db
+        Set Global Variable    ${config_username_db}
+        @{config_pwd_db}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_db
+        Set Global Variable    ${config_pwd_db}
+        @{config_host}=    Get values from JSON    ${config}    $.Configurator[${b}].host
+        Set Global Variable    ${config_host}
+        @{config_port}=    Get values from JSON    ${config}    $.Configurator[${b}].port
+        Set Global Variable    ${config_port}
+        @{config_pwd_server}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_server
+        Set Global Variable    ${config_pwd_server}
+        @{config_username_server}=    Get values from JSON    ${config}    $.Configurator[${b}].username_server
+        Set Global Variable    ${config_username_server}
+        @{config_host_server}=    Get values from JSON    ${config}    $.Configurator[${b}].host_server
+        Set Global Variable    ${config_host_server}
+        @{config_dtnrurl}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnr_url
+        Set Global Variable    ${config_dtnrurl}
+        @{config_dtnrusername}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnrusername_value
+        Set Global Variable    ${config_dtnrusername}
+        @{config_dtnrpwd}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnrpassword_value
+        Set Global Variable    ${config_dtnrpwd}
+        log    ${b}
+    END
+    log    ${b}
+    ${b}=    Evaluate    ${b} + 1
+    ${a}=    Evaluate    ${a} + 1
+    END
+
+SFA_ExecutorUpdateEnvfromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    rest/api/2/issue/${testplankey}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    To Json    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../SFA/Inputdata/SFA_Executor.json
+    ${executorfile}    Load JSON from file    ${executorpath}
+    ${environment}    Get value from JSON    ${response}    $..fields.customfield_10224[0]
+    ${environment}    Update value to JSON    ${executorfile}    $..Environment    ${environment}
+    Save JSON to file    ${executorfile}    ${executorpath}
+
+ESHOP_MoveFileToArchive
+    ${sourcefile}    Set Variable    ${CURDIR}/../../ResultFile/Result/*.zip
+    ${destinationpath}    Set Variable    ${CURDIR}/../../Archive
+    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    Run Keyword If    '${countFiles}'>='1'    OperatingSystem.Move Files    ${sourcefile}    ${destinationpath}
+    #    UpdateXrayFiletoDefault
+    #    ESHOP_JiraConfigValue
+    #    ESHOP_ExecutorUpdateTestsFromJira
+    ESHOP_ExecutorExcel_Setup
+
+ESHOP_JiraConfigValue
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../ESHOP/Config/ESHOP_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{jiraurl}=    Get values from JSON    ${config}    $.Configurator[*].jiraurl
+    @{jirauname}=    Get values from JSON    ${config}    $.Configurator[*].jirauname
+    @{jirapwd}=    Get values from JSON    ${config}    $.Configurator[*].jirapwd
+    @{testplankey}=    Get values from JSON    ${config}    $.Configurator[*].testplankey
+    ${jiraurl}=    Convert To String    @{jiraurl}
+    ${jirauname}=    Convert To String    @{jirauname}
+    ${jirapwd}=    Convert To String    @{jirapwd}
+    ${testplankey}=    Convert To String    @{testplankey}
+    Set Global Variable    ${jiraurl}
+    Set Global Variable    ${jirauname}
+    Set Global Variable    ${jirapwd}
+    Set Global Variable    ${testplankey}
+    ${xrayjsonpath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${xrayjson}    Load JSON from file    ${xrayjsonpath}
+    ${latestJson}    Update value to JSON    ${xrayjson}    $..testPlanKey    ${testplankey}
+    Save JSON to file    ${latestJson}    ${xrayjsonpath}
+
+ESHOP_ExecutorUpdateTestsFromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    /rest/raven/1.0/api/testplan/${testplankey}/test    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    Set Variable    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../ESHOP/Inputdata/ESHOP_Executor.json
+    ${updatetestcases}    Load JSON from file    ${executorpath}
+    ${latesttestcases}    Update value to JSON    ${updatetestcases}    $..tests    ${response}
+    Save JSON to file    ${latesttestcases}    ${executorpath}
+    Run Keyword If    "${status}"=="200"    ESHOP_ExecutorUpdateEnvfromJira
+
+ESHOP_ExecutorUpdateEnvfromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    rest/api/2/issue/${testplankey}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    To Json    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../ESHOP/Inputdata/ESHOP_Executor.json
+    ${executorfile}    Load JSON from file    ${executorpath}
+    ${environment}    Get value from JSON    ${response}    $..fields.customfield_10224[0]
+    ${environment}    Update value to JSON    ${executorfile}    $..Environment    ${environment}
+    Save JSON to file    ${executorfile}    ${executorpath}
+
+ESHOP_ExecutorExcel_Setup
+    ${executor}    OperatingSystem.Get File    ${CURDIR}/../ESHOP/Config/ESHOP_Executor.json
+    &{values}=    Convert string to JSON    ${executor}
+    @{names}=    Get values from JSON    ${values}    $.tests[*].key
+    ${exec_env}=    Get values from JSON    ${values}    $..Environment
+    ${exec_env_cnt}=    Get length    ${exec_env}
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../ESHOP/Config/ESHOP_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{config_env}=    Get values from JSON    ${config}    $.Configurator[*].Environment
+    ${config_env_cnt}=    Get length    ${config_env}
+    Log Many    @{config_env}
+    ${config_env}=    Convert To String    @{config_env}
+    Log Many    @{names}
+    FOR    ${name}    IN    @{names}
+    log    ${name}
+    log    ${A1}
+    @{dict}=    read csv file to associative    ${ESHOP_EXCEL_FILE}
+    log many    ${dict}
+    ${dictlen}=    Get length    ${dict}
+    ${i}    Set Variable    1
+    FOR    ${i}    IN RANGE    ${dictlen}
+        log    ${dict[${i}]['Flag']}
+        log    ${dict[${i}]['JiraID']}
+        log    ${dict[${i}]['TestcaseID']}
+        IF    '${dict[${i}]['JiraID']}'=='${name}'
+        set to dictionary    ${dict[${i}]}    Flag    Y
+        log many    ${dict[${i}]}
+        csv file from associative    ${ESHOP_EXCEL_FILE}    ${dict}
+    END
+    END
+    END
+    FOR    ${config_envi}    IN    ${config_env}
+        IF    "${exec_env}[${a}]" == "${config_envi}"
+        Log    ${config_envi}
+        @{config_modulename}=    Get values from JSON    ${config}    $.Configurator[${b}].modulename
+        Set Global Variable    ${config_modulename}
+        @{config_username_db}=    Get values from JSON    ${config}    $.Configurator[${b}].username_db
+        Set Global Variable    ${config_username_db}
+        @{config_pwd_db}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_db
+        Set Global Variable    ${config_pwd_db}
+        @{config_host}=    Get values from JSON    ${config}    $.Configurator[${b}].host
+        Set Global Variable    ${config_host}
+        @{config_port}=    Get values from JSON    ${config}    $.Configurator[${b}].port
+        Set Global Variable    ${config_port}
+        @{config_pwd_server}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_server
+        Set Global Variable    ${config_pwd_server}
+        @{config_username_server}=    Get values from JSON    ${config}    $.Configurator[${b}].username_server
+        Set Global Variable    ${config_username_server}
+        @{config_host_server}=    Get values from JSON    ${config}    $.Configurator[${b}].host_server
+        Set Global Variable    ${config_host_server}
+        @{config_dtnrurl}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnr_url
+        Set Global Variable    ${config_dtnrurl}
+        @{config_dtnrusername}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnrusername_value
+        Set Global Variable    ${config_dtnrusername}
+        @{config_dtnrpwd}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnrpassword_value
+        Set Global Variable    ${config_dtnrpwd}
+        log    ${b}
+    END
+    log    ${b}
+    ${b}=    Evaluate    ${b} + 1
+    ${a}=    Evaluate    ${a} + 1
+    END
+
+Selfcare_MoveFileToArchive
+    Comment    ${sourcefile}    Set Variable    ${CURDIR}/../ResultFile/Result/*.zip
+    Comment    ${destinationpath}    Set Variable    ${CURDIR}/../Archive
+    Comment    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    Comment    Run Keyword If    '${countFiles}'>='1'    OperatingSystem.Move Files    ${sourcefile}    ${destinationpath}
+    UpdateXrayFiletoDefault
+    #Selfcare_JiraConfigValue
+    #Selfcare_ExecutorUpdateTestsFromJira
+        Selfcare_ExecutorExcel_Setup
+
+Selfcare_JiraConfigValue
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../Selfcare/Config/Selfcare_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{jiraurl}=    Get values from JSON    ${config}    $.Configurator[*].jiraurl
+    @{jirauname}=    Get values from JSON    ${config}    $.Configurator[*].jirauname
+    @{jirapwd}=    Get values from JSON    ${config}    $.Configurator[*].jirapwd
+    ${Testexeckey}    Set Variable    ${Testexeckey}
+    ${jiraurl}=    Convert To String    @{jiraurl}
+    ${jirauname}=    Convert To String    @{jirauname}
+    ${jirapwd}=    Convert To String    @{jirapwd}
+    Comment    ${testplankey}=    Convert To String    @{testplankey}
+    Set Global Variable    ${jiraurl}
+    Set Global Variable    ${jirauname}
+    Set Global Variable    ${jirapwd}
+    Set Global Variable    ${Testexeckey}
+    ${xrayjsonpath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${xrayjson}    Load JSON from file    ${xrayjsonpath}
+    ${latestJson}    Update value to JSON    ${xrayjson}    $..testExecutionKey    ${Testexeckey}
+    Save JSON to file    ${latestJson}    ${xrayjsonpath}
+
+Selfcare_ExecutorUpdateTestsFromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    /rest/raven/1.0/api/testexec/${Testexeckey}/test    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    Set Variable    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../Selfcare/Config/Selfcare_Executor.json
+    ${updatetestcases}    Load JSON from file    ${executorpath}
+    ${latesttestcases}    Update value to JSON    ${updatetestcases}    $..tests    ${response}
+    Save JSON to file    ${latesttestcases}    ${executorpath}
+    Run Keyword If    "${status}"=="200"    Selfcare_ExecutorUpdateEnvfromJira
+
+Selfcare_ExecutorUpdateEnvfromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    rest/api/2/issue/${Testexeckey}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    To Json    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../Selfcare/Config/Selfcare_Executor.json
+    ${executorfile}    Load JSON from file    ${executorpath}
+    ${environment}    Get value from JSON    ${response}    $..fields.customfield_10224[0]
+    ${environment}    Update value to JSON    ${executorfile}    $..Environment    ${environment}
+    Save JSON to file    ${executorfile}    ${executorpath}
+
+Selfcare_ExecutorExcel_Setup
+    ${executor}    OperatingSystem.Get File    ${CURDIR}/../Selfcare/Config/Selfcare_Executor.json
+    &{values}=    Convert string to JSON    ${executor}
+    @{names}=    Get values from JSON    ${values}    $.tests[*].key
+    ${exec_env}=    Get values from JSON    ${values}    $..Environment
+    ${exec_env_cnt}=    Get length    ${exec_env}
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../Selfcare/Config/Selfcare_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{config_env}=    Get values from JSON    ${config}    $.Configurator[*].Environment
+    ${config_env_cnt}=    Get length    ${config_env}
+    Log Many    @{config_env}
+    ${config_env}=    Convert To String    @{config_env}
+    Log Many    @{names}
+    FOR    ${name}    IN    @{names}
+    log    ${name}
+    log    ${A1}
+    @{dict}=    read csv file to associative    ${SELFCARE_EXCEL_FILE}
+    log many    ${dict}
+    ${dictlen}=    Get length    ${dict}
+    ${i}    Set Variable    1
+    FOR    ${i}    IN RANGE    ${dictlen}
+        log    ${dict[${i}]['Flag']}
+        log    ${dict[${i}]['JiraID']}
+        log    ${dict[${i}]['TestcaseID']}
+        IF    '${dict[${i}]['JiraID']}'=='${name}'
+        set to dictionary    ${dict[${i}]}    Flag    Y
+        log many    ${dict[${i}]}
+        csv file from associative    ${SELFCARE_EXCEL_FILE}    ${dict}
+    END
+    END
+    END
+    FOR    ${config_envi}    IN    ${config_env}
+        IF    "${exec_env}[${a}]" == "${config_envi}"
+        Log    ${config_envi}
+        @{config_URL}=    Get values from JSON    ${config}    $.Configurator[${b}].URL
+        Set Global Variable    @{config_URL}
+        log    ${b}
+    END
+    log    ${b}
+    ${b}=    Evaluate    ${b} + 1
+    ${a}=    Evaluate    ${a} + 1
+    END
+
+EAI_MoveFileToArchive
+    ${sourcefile}    Set Variable    ${CURDIR}/../../ResultFile/Result/*.zip
+    ${destinationpath}    Set Variable    ${CURDIR}/../../Archive
+    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    Run Keyword If    '${countFiles}'>='1'    OperatingSystem.Move Files    ${sourcefile}    ${destinationpath}
+    #UpdateXrayFiletoDefault
+    #EAI_JiraConfigValue
+    #EAI_ExecutorUpdateTestsFromJira
+    EAI_ExecutorExcel_Setup
+
+EAI_JiraConfigValue
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../EAI/Inputdata/EAI_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{jiraurl}=    Get values from JSON    ${config}    $.Configurator[*].jiraurl
+    @{jirauname}=    Get values from JSON    ${config}    $.Configurator[*].jirauname
+    @{jirapwd}=    Get values from JSON    ${config}    $.Configurator[*].jirapwd
+    @{testplankey}=    Get values from JSON    ${config}    $.Configurator[*].testplankey
+    ${jiraurl}=    Convert To String    @{jiraurl}
+    ${jirauname}=    Convert To String    @{jirauname}
+    ${jirapwd}=    Convert To String    @{jirapwd}
+    ${testplankey}=    Convert To String    @{testplankey}
+    Set Global Variable    ${jiraurl}
+    Set Global Variable    ${jirauname}
+    Set Global Variable    ${jirapwd}
+    Set Global Variable    ${testplankey}
+    ${xrayjsonpath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${xrayjson}    Load JSON from file    ${xrayjsonpath}
+    ${latestJson}    Update value to JSON    ${xrayjson}    $..testPlanKey    ${testplankey}
+    Save JSON to file    ${latestJson}    ${xrayjsonpath}
+
+EAI_ExecutorUpdateEnvfromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    rest/api/2/issue/${testplankey}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    To Json    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../EAI/Inputdata/EAI_Executor.json
+    ${executorfile}    Load JSON from file    ${executorpath}
+    ${environment}    Get value from JSON    ${response}    $..fields.customfield_10224[0]
+    ${environment}    Update value to JSON    ${executorfile}    $..Environment    ${environment}
+    Save JSON to file    ${executorfile}    ${executorpath}
+
+EAI_ExecutorUpdateTestsFromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    /rest/raven/1.0/api/testplan/${testplankey}/test    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    Set Variable    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../EAI/Inputdata/EAI_Executor.json
+    ${updatetestcases}    Load JSON from file    ${executorpath}
+    ${latesttestcases}    Update value to JSON    ${updatetestcases}    $..tests    ${response}
+    Save JSON to file    ${latesttestcases}    ${executorpath}
+    Run Keyword If    "${status}"=="200"    EAI_ExecutorUpdateEnvfromJira
+
+EAI_ExecutorExcel_Setup
+    ${executor}    OperatingSystem.Get File    ${CURDIR}/../EAI/Inputdata/EAI_Executor.json
+    &{values}=    Convert string to JSON    ${executor}
+    @{names}=    Get values from JSON    ${values}    $.tests[*].key
+    ${exec_env}=    Get values from JSON    ${values}    $..Environment
+    ${exec_env_cnt}=    Get length    ${exec_env}
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../EAI/Inputdata/EAI_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{config_env}=    Get values from JSON    ${config}    $.Configurator[*].Environment
+    ${config_env_cnt}=    Get length    ${config_env}
+    Log Many    @{config_env}
+    ${config_env}=    Convert To String    @{config_env}
+    Log Many    @{names}
+    FOR    ${name}    IN    @{names}
+    log    ${name}
+    log    ${A1}
+    @{dict}=    read csv file to associative    ${EAI_EXCEL_FILE}
+    log many    ${dict}
+    ${dictlen}=    Get length    ${dict}
+    ${i}    Set Variable    1
+    FOR    ${i}    IN RANGE    ${dictlen}
+        log    ${dict[${i}]['Flag']}
+        log    ${dict[${i}]['JiraID']}
+        log    ${dict[${i}]['TestcaseID']}
+        IF    '${dict[${i}]['JiraID']}'=='${name}'
+        set to dictionary    ${dict[${i}]}    Flag    Y
+        log many    ${dict[${i}]}
+        csv file from associative    ${EAI_EXCEL_FILE}    ${dict}
+    END
+    END
+    END
+    FOR    ${config_envi}    IN    ${config_env}
+        IF    "${exec_env}[${a}]" == "${config_envi}"
+        Log    ${config_envi}
+        @{WSDL}=    Get values from JSON    ${config}    $.Configurator[${b}].WSDL
+        ${WSDL}=    Convert To String    @{WSDL}
+        Set Global Variable    ${WSDL}
+        @{PROXY}=    Get values from JSON    ${config}    $.Configurator[${b}].PROXY
+        ${PROXY}=    Convert To String    @{PROXY}
+        Set Global Variable    ${PROXY}
+        log    ${b}
+    END
+    log    ${b}
+    ${b}=    Evaluate    ${b} + 1
+    ${a}=    Evaluate    ${a} + 1
+    END
+
+PGW_MoveFileToArchive
+    ${sourcefile}    Set Variable    ${CURDIR}/../../ResultFile/Result/*.zip
+    ${destinationpath}    Set Variable    ${CURDIR}/../../Archive
+    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    Run Keyword If    '${countFiles}'>='1'    OperatingSystem.Move Files    ${sourcefile}    ${destinationpath}
+    #UpdateXrayFiletoDefault
+    #PGW_JiraConfigValue
+    #PGW_ExecutorUpdateTestsFromJira
+    Comment    PGW_ExecutorExcel_Setup
+
+PGW_JiraConfigValue
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../PGW/Inputdata/PGW_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{jiraurl}=    Get values from JSON    ${config}    $.Configurator[*].jiraurl
+    @{jirauname}=    Get values from JSON    ${config}    $.Configurator[*].jirauname
+    @{jirapwd}=    Get values from JSON    ${config}    $.Configurator[*].jirapwd
+    @{testplankey}=    Get values from JSON    ${config}    $.Configurator[*].testplankey
+    ${jiraurl}=    Convert To String    @{jiraurl}
+    ${jirauname}=    Convert To String    @{jirauname}
+    ${jirapwd}=    Convert To String    @{jirapwd}
+    ${testplankey}=    Convert To String    @{testplankey}
+    Set Global Variable    ${jiraurl}
+    Set Global Variable    ${jirauname}
+    Set Global Variable    ${jirapwd}
+    Set Global Variable    ${testplankey}
+    ${xrayjsonpath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${xrayjson}    Load JSON from file    ${xrayjsonpath}
+    ${latestJson}    Update value to JSON    ${xrayjson}    $..testPlanKey    ${testplankey}
+    Save JSON to file    ${latestJson}    ${xrayjsonpath}
+
+PGW_ExecutorUpdateEnvfromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    rest/api/2/issue/${testplankey}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    To Json    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../PGW/Inputdata/PGW_Executor.json
+    ${executorfile}    Load JSON from file    ${executorpath}
+    ${environment}    Get value from JSON    ${response}    $..fields.customfield_10224[0]
+    ${environment}    Update value to JSON    ${executorfile}    $..Environment    ${environment}
+    Save JSON to file    ${executorfile}    ${executorpath}
+
+PGW_ExecutorUpdateTestsFromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    /rest/raven/1.0/api/testplan/${testplankey}/test    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    Set Variable    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../PGW/Inputdata/PGW_Executor.json
+    ${updatetestcases}    Load JSON from file    ${executorpath}
+    ${latesttestcases}    Update value to JSON    ${updatetestcases}    $..tests    ${response}
+    Save JSON to file    ${latesttestcases}    ${executorpath}
+    Run Keyword If    "${status}"=="200"    PGW_ExecutorUpdateEnvfromJira
+
+PGW_ExecutorExcel_Setup
+    ${executor}    OperatingSystem.Get File    ${CURDIR}/../PGW/Inputdata/PGW_Executor.json
+    &{values}=    Convert string to JSON    ${executor}
+    @{names}=    Get values from JSON    ${values}    $.tests[*].key
+    ${exec_env}=    Get values from JSON    ${values}    $..Environment
+    ${exec_env_cnt}=    Get length    ${exec_env}
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../PGW/Inputdata/PGW_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{config_env}=    Get values from JSON    ${config}    $.Configurator[*].Environment
+    ${config_env_cnt}=    Get length    ${config_env}
+    Log Many    @{config_env}
+    ${config_env}=    Convert To String    @{config_env}
+    Log Many    @{names}
+    FOR    ${name}    IN    @{names}
+    log    ${name}
+    log    ${A1}
+    @{dict}=    read csv file to associative    ${PGW_INPUTDATA}
+    log many    ${dict}
+    ${dictlen}=    Get length    ${dict}
+    ${i}    Set Variable    1
+    FOR    ${i}    IN RANGE    ${dictlen}
+        log    ${dict[${i}]['Flag']}
+        log    ${dict[${i}]['JiraID']}
+        log    ${dict[${i}]['TestcaseID']}
+        IF    '${dict[${i}]['JiraID']}'=='${name}'
+        set to dictionary    ${dict[${i}]}    Flag    Y
+        log many    ${dict[${i}]}
+        csv file from associative    ${PGW_INPUTDATA}    ${dict}
+    END
+    END
+    END
+    FOR    ${config_envi}    IN    ${config_env}
+        IF    "${exec_env}[${a}]" == "${config_envi}"
+        Log    ${config_envi}
+        @{modulename}=    Get values from JSON    ${config}    $.Configurator[${b}].modulename
+        ${modulename}=    Convert To String    @{modulename}
+        Set Global Variable    ${modulename}
+        @{username_db}=    Get values from JSON    ${config}    $.Configurator[${b}].username_db
+        ${username_db}=    Convert To String    @{username_db}
+        Set Global Variable    ${username_db}
+        @{pwd_db}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_db
+        ${pwd_db}=    Convert To String    @{pwd_db}
+        Set Global Variable    ${pwd_db}
+        @{host}=    Get values from JSON    ${config}    $.Configurator[${b}].host
+        ${host}=    Convert To String    @{host}
+        Set Global Variable    ${host}
+        @{port}=    Get values from JSON    ${config}    $.Configurator[${b}].port
+        ${port}=    Convert To String    @{port}
+        Set Global Variable    ${port}
+        @{WSDL}=    Get values from JSON    ${config}    $.Configurator[${b}].WSDL
+        ${WSDL}=    Convert To String    @{WSDL}
+        Set Global Variable    ${WSDL}
+        @{PORTALWSDL}=    Get values from JSON    ${config}    $.Configurator[${b}].PORTALWSDL
+        ${PORTALWSDL}=    Convert To String    @{PORTALWSDL}
+        Set Global Variable    ${PORTALWSDL}
+        @{PGWURL}=    Get values from JSON    ${config}    $.Configurator[${b}].PGWURL
+        ${PGWURL}=    Convert To String    @{PGWURL}
+        Set Global Variable    ${PGWURL}
+        @{PGWUserNameVal}=    Get values from JSON    ${config}    $.Configurator[${b}].PGWUserNameVal
+        ${PGWUserNameVal}=    Convert To String    @{PGWUserNameVal}
+        Set Global Variable    ${PGWUserNameVal}
+        @{PGWPwdVal}=    Get values from JSON    ${config}    $.Configurator[${b}].PGWPwdVal
+        ${PGWPwdVal}=    Convert To String    @{PGWPwdVal}
+        Set Global Variable    ${PGWPwdVal}
+        @{PGWServerIP}=    Get values from JSON    ${config}    $.Configurator[${b}].PGWServerIP
+        ${PGWServerIP}=    Convert To String    @{PGWServerIP}
+        Set Global Variable    ${PGWServerIP}
+        @{PGWServerUserName}=    Get values from JSON    ${config}    $.Configurator[${b}].PGWServerUserName
+        ${PGWServerUserName}=    Convert To String    @{PGWServerUserName}
+        Set Global Variable    ${PGWServerUserName}
+        @{PGWServerPWD}=    Get values from JSON    ${config}    $.Configurator[${b}].PGWServerPWD
+        ${PGWServerPWD}=    Convert To String    @{PGWServerPWD}
+        Set Global Variable    ${PGWServerPWD}
+        log    ${b}
+    END
+    log    ${b}
+    ${b}=    Evaluate    ${b} + 1
+    ${a}=    Evaluate    ${a} + 1
+    END
+
+Replication_MoveFileToArchive
+    ${sourcefile}    Set Variable    ${CURDIR}/../../ResultFile/Result/*.zip
+    ${destinationpath}    Set Variable    ${CURDIR}/../../Archive
+    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    Run Keyword If    '${countFiles}'>='1'    OperatingSystem.Move Files    ${sourcefile}    ${destinationpath}
+    UpdateXrayFiletoDefault
+    Replication_JiraConfigValue
+    Replication_ExecutorUpdateTestsFromJira
+    Replication_ExecutorExcel_Setup
+
+Replication_JiraConfigValue
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../Replication_Validation/Inputdata/Replication_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{jiraurl}=    Get values from JSON    ${config}    $.Configurator[*].jiraurl
+    @{jirauname}=    Get values from JSON    ${config}    $.Configurator[*].jirauname
+    @{jirapwd}=    Get values from JSON    ${config}    $.Configurator[*].jirapwd
+    @{testplankey}=    Get values from JSON    ${config}    $.Configurator[*].testplankey
+    ${jiraurl}=    Convert To String    @{jiraurl}
+    ${jirauname}=    Convert To String    @{jirauname}
+    ${jirapwd}=    Convert To String    @{jirapwd}
+    ${testplankey}=    Convert To String    @{testplankey}
+    Set Global Variable    ${jiraurl}
+    Set Global Variable    ${jirauname}
+    Set Global Variable    ${jirapwd}
+    Set Global Variable    ${testplankey}
+
+Replication_ExecutorUpdateTestsFromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    /rest/raven/1.0/api/testplan/${testplankey}/test    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    Set Variable    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../Replication_Validation/Inputdata/Replication_Executor.json
+    ${updatetestcases}    Load JSON from file    ${executorpath}
+    ${latesttestcases}    Update value to JSON    ${updatetestcases}    $..tests    ${response}
+    Save JSON to file    ${latesttestcases}    ${executorpath}
+    Run Keyword If    "${status}"=="200"    ExecutorUpdateEnvfromJira
+
+Replication_ExecutorExcel_Setup
+    ${executor}    OperatingSystem.Get File    ${CURDIR}/../Replication_Validation/Inputdata/Replication_Executor.json
+    &{values}=    Convert string to JSON    ${executor}
+    @{names}=    Get values from JSON    ${values}    $.tests[*].key
+    ${exec_env}=    Get values from JSON    ${values}    $..Environment
+    ${exec_env_cnt}=    Get length    ${exec_env}
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../Replication_Validation/Inputdata/Replication_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{config_env}=    Get values from JSON    ${config}    $.Configurator[*].Environment
+    ${config_env_cnt}=    Get length    ${config_env}
+    Log Many    @{config_env}
+    ${config_env}=    Convert To String    @{config_env}
+    Log Many    @{names}
+    FOR    ${name}    IN    @{names}
+    log    ${name}
+    log    ${A1}
+    @{dict}=    read csv file to associative    ${Replication_CSV_FILE}
+    log many    ${dict}
+    ${dictlen}=    Get length    ${dict}
+    ${i}    Set Variable    1
+    FOR    ${i}    IN RANGE    ${dictlen}
+        log    ${dict[${i}]['Flag']}
+        log    ${dict[${i}]['JiraID']}
+        log    ${dict[${i}]['TestcaseID']}
+        IF    '${dict[${i}]['JiraID']}'=='${name}'
+        set to dictionary    ${dict[${i}]}    Flag    Y
+        log many    ${dict[${i}]}
+        csv file from associative    ${Replication_CSV_FILE}    ${dict}
+    END
+    END
+    END
+    FOR    ${config_envi}    IN    ${config_env}
+        IF    "${exec_env}[${a}]" == "${config_envi}"
+        Log    ${config_envi}
+        @{config_modulename}=    Get values from JSON    ${config}    $.Configurator[${b}].modulename
+        Set Global Variable    ${config_modulename}
+        @{config_username_db}=    Get values from JSON    ${config}    $.Configurator[${b}].username_db
+        Set Global Variable    ${config_username_db}
+        @{config_pwd_db}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_db
+        Set Global Variable    ${config_pwd_db}
+        @{config_host}=    Get values from JSON    ${config}    $.Configurator[${b}].host
+        Set Global Variable    ${config_host}
+        @{config_port}=    Get values from JSON    ${config}    $.Configurator[${b}].port
+        Set Global Variable    ${config_port}
+        @{config_pwd_server}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_server
+        Set Global Variable    ${config_pwd_server}
+        @{config_username_server}=    Get values from JSON    ${config}    $.Configurator[${b}].username_server
+        Set Global Variable    ${config_username_server}
+        @{config_host_server}=    Get values from JSON    ${config}    $.Configurator[${b}].host_server
+        Set Global Variable    ${config_host_server}
+        @{config_dtnrurl}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnr_url
+        Set Global Variable    ${config_dtnrurl}
+        @{config_dtnrusername}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnrusername_value
+        Set Global Variable    ${config_dtnrusername}
+        @{config_dtnrpwd}=    Get values from JSON    ${config}    $.Configurator[${b}].dtnrpassword_value
+        Set Global Variable    ${config_dtnrpwd}
+        log    ${b}
+    END
+    log    ${b}
+    ${b}=    Evaluate    ${b} + 1
+    ${a}=    Evaluate    ${a} + 1
+    END
+
+Replication_ExecutorUpdateEnvfromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    rest/api/2/issue/${testplankey}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    To Json    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../Replication_Validation/Inputdata/Replication_Executor.json
+    ${executorfile}    Load JSON from file    ${executorpath}
+    ${environment}    Get value from JSON    ${response}    $.fields.customfield_10473[0].value
+    ${environment}    Update value to JSON    ${executorfile}    $..Environment    ${environment}
+    Save JSON to file    ${executorfile}    ${executorpath}
+
+CLMS_MoveFileToArchive
+    ${sourcefile}    Set Variable    ${CURDIR}/../../ResultFile/Result/*.zip
+    ${destinationpath}    Set Variable    ${CURDIR}/../../Archive
+    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    Run Keyword If    '${countFiles}'>='1'    OperatingSystem.Move Files    ${sourcefile}    ${destinationpath}
+    UpdateXrayFiletoDefault
+    CLMS_JiraConfigValue
+    CLMS_ExecutorUpdateTestsFromJira
+    CLMS_ExecutorExcel_Setup
+
+CLMS_ExecutorExcel_Setup
+    ${executor}    OperatingSystem.Get File    ${CURDIR}/../CLMS/Inputdata/CLMS_Executor.json
+    &{values}=    Convert string to JSON    ${executor}
+    @{names}=    Get values from JSON    ${values}    $.tests[*].key
+    ${exec_env}=    Get values from JSON    ${values}    $..Environment
+    ${exec_env_cnt}=    Get length    ${exec_env}
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../CLMS/Inputdata/CLMS_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{config_env}=    Get values from JSON    ${config}    $.Configurator[*].Environment
+    ${config_env_cnt}=    Get length    ${config_env}
+    Log Many    @{config_env}
+    ${config_env}=    Convert To String    @{config_env}
+    Log Many    @{names}
+    FOR    ${name}    IN    @{names}
+    log    ${name}
+    log    ${A1}
+    @{dict}=    read csv file to associative    ${CLMS_EXCEL_FILE}
+    log many    ${dict}
+    ${dictlen}=    Get length    ${dict}
+    ${i}    Set Variable    1
+    FOR    ${i}    IN RANGE    ${dictlen}
+        log    ${dict[${i}]['Flag']}
+        log    ${dict[${i}]['JiraID']}
+        log    ${dict[${i}]['TestcaseID']}
+        IF    '${dict[${i}]['JiraID']}'=='${name}'
+        set to dictionary    ${dict[${i}]}    Flag    Y
+        log many    ${dict[${i}]}
+        csv file from associative    ${CLMS_EXCEL_FILE}    ${dict}
+    END
+    END
+    END
+    FOR    ${config_envi}    IN    ${config_env}
+        IF    "${exec_env}[${a}]" == "${config_envi}"
+        Log    ${config_envi}
+        @{modulename}=    Get values from JSON    ${config}    $.Configurator[${b}].modulename
+        ${modulename}=    Convert To String    @{modulename}
+        Set Global Variable    ${modulename}
+        @{username_db}=    Get values from JSON    ${config}    $.Configurator[${b}].username_db
+        ${username_db}=    Convert To String    @{username_db}
+        Set Global Variable    ${username_db}
+        @{pwd_db}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_db
+        ${pwd_db}=    Convert To String    @{pwd_db}
+        Set Global Variable    ${pwd_db}
+        @{host}=    Get values from JSON    ${config}    $.Configurator[${b}].host
+        ${host}=    Convert To String    @{host}
+        Set Global Variable    ${host}
+        @{port}=    Get values from JSON    ${config}    $.Configurator[${b}].port
+        ${port}=    Convert To String    @{port}
+        Set Global Variable    ${port}
+        @{bscsurl}=    Get values from JSON    ${config}    $.Configurator[${b}].bscsurl
+        ${bscsurl}=    Convert To String    @{bscsurl}
+        Set Global Variable    ${bscsurl}
+        @{bscsusername}=    Get values from JSON    ${config}    $.Configurator[${b}].bscsusername
+        ${bscsusername}=    Convert To String    @{bscsusername}
+        Set Global Variable    ${bscsusername}
+        @{bscspwd}=    Get values from JSON    ${config}    $.Configurator[${b}].bscsusername
+        ${bscspwd}=    Convert To String    @{bscspwd}
+        Set Global Variable    ${bscspwd}
+        @{clmsurl}=    Get values from JSON    ${config}    $.Configurator[${b}].clmsurl
+        ${clmsurl}=    Convert To String    @{clmsurl}
+        Set Global Variable    ${clmsurl}
+        @{clmsusernamevalue}=    Get values from JSON    ${config}    $.Configurator[${b}].clmsusernamevalue
+        ${clmsusernamevalue}=    Convert To String    @{clmsusernamevalue}
+        Set Global Variable    ${clmsusernamevalue}
+        @{clmspwdvalue}=    Get values from JSON    ${config}    $.Configurator[${b}].clmspwdvalue
+        ${clmspwdvalue}=    Convert To String    @{clmspwdvalue}
+        Set Global Variable    ${clmspwdvalue}
+        log    ${b}
+    END
+    log    ${b}
+    ${b}=    Evaluate    ${b} + 1
+    ${a}=    Evaluate    ${a} + 1
+    END
+
+CLMS_ExecutorUpdateTestsFromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    /rest/raven/1.0/api/testplan/${testplankey}/test    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    Set Variable    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../CLMS/Inputdata/CLMS_Executor.json
+    ${updatetestcases}    Load JSON from file    ${executorpath}
+    ${latesttestcases}    Update value to JSON    ${updatetestcases}    $..tests    ${response}
+    Save JSON to file    ${latesttestcases}    ${executorpath}
+    Run Keyword If    "${status}"=="200"    CLMS_ExecutorUpdateEnvfromJira
+
+CLMS_ExecutorUpdateEnvfromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    rest/api/2/issue/${testplankey}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    To Json    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../CLMS/Inputdata/CLMS_Executor.json
+    ${executorfile}    Load JSON from file    ${executorpath}
+    ${environment}    Get value from JSON    ${response}    $..fields.customfield_10224[0]
+    ${environment}    Update value to JSON    ${executorfile}    $..Environment    ${environment}
+    Save JSON to file    ${executorfile}    ${executorpath}
+
+CLMS_JiraConfigValue
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../CLMS/Inputdata/CLMS_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{jiraurl}=    Get values from JSON    ${config}    $.Configurator[*].jiraurl
+    @{jirauname}=    Get values from JSON    ${config}    $.Configurator[*].jirauname
+    @{jirapwd}=    Get values from JSON    ${config}    $.Configurator[*].jirapwd
+    @{testplankey}=    Get values from JSON    ${config}    $.Configurator[*].testplankey
+    ${jiraurl}=    Convert To String    @{jiraurl}
+    ${jirauname}=    Convert To String    @{jirauname}
+    ${jirapwd}=    Convert To String    @{jirapwd}
+    ${testplankey}=    Convert To String    @{testplankey}
+    Set Global Variable    ${jiraurl}
+    Set Global Variable    ${jirauname}
+    Set Global Variable    ${jirapwd}
+    Set Global Variable    ${testplankey}
+    ${xrayjsonpath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${xrayjson}    Load JSON from file    ${xrayjsonpath}
+    ${latestJson}    Update value to JSON    ${xrayjson}    $..testPlanKey    ${testplankey}
+    Save JSON to file    ${latestJson}    ${xrayjsonpath}
+
+CRM_MoveFileToArchive
+    ${sourcefile}    Set Variable    ${CURDIR}/../../ResultFile/Result/*.zip
+    ${destinationpath}    Set Variable    ${CURDIR}/../../Archive
+    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    Run Keyword If    '${countFiles}'>='1'    OperatingSystem.Move Files    ${sourcefile}    ${destinationpath}
+    UpdateXrayFiletoDefault
+    CRM_JiraConfigValue
+    CRM_ExecutorUpdateTestsFromJira
+    CRM_ExecutorExcel_Setup
+
+CRM_ExecutorExcel_Setup
+    ${executor}    OperatingSystem.Get File    ${CURDIR}/../CRM/Inputdata/CRM_Executor.json
+    &{values}=    Convert string to JSON    ${executor}
+    @{names}=    Get values from JSON    ${values}    $.tests[*].key
+    ${exec_env}=    Get values from JSON    ${values}    $..Environment
+    ${exec_env_cnt}=    Get length    ${exec_env}
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../CRM/Inputdata/CRM_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{config_env}=    Get values from JSON    ${config}    $.Configurator[*].Environment
+    ${config_env_cnt}=    Get length    ${config_env}
+    Log Many    @{config_env}
+    ${config_env}=    Convert To String    @{config_env}
+    Log Many    @{names}
+    FOR    ${name}    IN    @{names}
+    log    ${name}
+    log    ${A1}
+    @{dict}=    read csv file to associative    ${CRM_INPUTDATA}
+    log many    ${dict}
+    ${dictlen}=    Get length    ${dict}
+    ${i}    Set Variable    1
+    FOR    ${i}    IN RANGE    ${dictlen}
+        log    ${dict[${i}]['Flag']}
+        log    ${dict[${i}]['JiraID']}
+        log    ${dict[${i}]['TestcaseID']}
+        IF    '${dict[${i}]['JiraID']}'=='${name}'
+        set to dictionary    ${dict[${i}]}    Flag    Y
+        log many    ${dict[${i}]}
+        csv file from associative    ${CRM_INPUTDATA}    ${dict}
+    END
+    END
+    END
+    FOR    ${config_envi}    IN    ${config_env}
+        IF    "${exec_env}[${a}]" == "${config_envi}"
+        Log    ${config_envi}
+        @{modulename}=    Get values from JSON    ${config}    $.Configurator[${b}].modulename
+        ${modulename}=    Convert To String    @{modulename}
+        Set Global Variable    ${modulename}
+        @{username_db}=    Get values from JSON    ${config}    $.Configurator[${b}].username_db
+        ${username_db}=    Convert To String    @{username_db}
+        Set Global Variable    ${username_db}
+        @{pwd_db}=    Get values from JSON    ${config}    $.Configurator[${b}].pwd_db
+        ${pwd_db}=    Convert To String    @{pwd_db}
+        Set Global Variable    ${pwd_db}
+        @{host}=    Get values from JSON    ${config}    $.Configurator[${b}].host
+        ${host}=    Convert To String    @{host}
+        Set Global Variable    ${host}
+        @{port}=    Get values from JSON    ${config}    $.Configurator[${b}].port
+        ${port}=    Convert To String    @{port}
+        Set Global Variable    ${port}
+        @{BSCSURL}=    Get values from JSON    ${config}    $.Configurator[${b}].BSCSURL
+        ${BSCSURL}=    Convert To String    @{BSCSURL}
+        Set Global Variable    ${BSCSURL}
+        @{BSCSusername}=    Get values from JSON    ${config}    $.Configurator[${b}].BSCSusername
+        ${BSCSusername}=    Convert To String    @{BSCSusername}
+        Set Global Variable    ${BSCSusername}
+        @{BSCSpassword}=    Get values from JSON    ${config}    $.Configurator[${b}].BSCSpassword
+        ${BSCSpassword}=    Convert To String    @{BSCSpassword}
+        Set Global Variable    ${BSCSpassword}
+        @{crm_url}=    Get values from JSON    ${config}    $.Configurator[${b}].crm_url
+        ${crm_url}=    Convert To String    @{crm_url}
+        Set Global Variable    ${crm_url}
+        @{login_username_value_enterprise}=    Get values from JSON    ${config}    $.Configurator[${b}].login_username_value_enterprise
+        ${login_username_value_enterprise}=    Convert To String    @{login_username_value_enterprise}
+        Set Global Variable    ${login_username_value_enterprise}
+        @{login_username_value_consumer}=    Get values from JSON    ${config}    $.Configurator[${b}].login_username_value_consumer
+        ${login_username_value_consumer}=    Convert To String    @{login_username_value_consumer}
+        Set Global Variable    ${login_username_value_consumer}
+        @{login_password_value}=    Get values from JSON    ${config}    $.Configurator[${b}].login_password_value
+        ${login_password_value}=    Convert To String    @{login_password_value}
+        Set Global Variable    ${login_password_value}
+        log    ${b}
+    END
+    log    ${b}
+    ${b}=    Evaluate    ${b} + 1
+    ${a}=    Evaluate    ${a} + 1
+    END
+
+CRM_ExecutorUpdateTestsFromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    /rest/raven/1.0/api/testplan/${testplankey}/test    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    Set Variable    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../CRM/Inputdata/CRM_Executor.json
+    ${updatetestcases}    Load JSON from file    ${executorpath}
+    ${latesttestcases}    Update value to JSON    ${updatetestcases}    $..tests    ${response}
+    Save JSON to file    ${latesttestcases}    ${executorpath}
+    Run Keyword If    "${status}"=="200"    CRM_ExecutorUpdateEnvfromJira
+
+CRM_ExecutorUpdateEnvfromJira
+    ${auth}    Create List    ${jirauname}    ${jirapwd}
+    ${endpoint}    Set Variable    ${jiraurl}
+    Create Session    alias    ${endpoint}    auth=${auth}
+    &{headers}    Create Dictionary    Content-Type=application/json    charset=UTF-8
+    ${response}    Get Request    alias    rest/api/2/issue/${testplankey}    headers=${headers}
+    Log    ${response}
+    ${status}    Set Variable    ${response.status_code}
+    Log    ${status}
+    Log    ${response.text}
+    ${response}    To Json    ${response.text}
+    ${executorpath}    Set Variable    ${CURDIR}/../CRM/Inputdata/CRM_Executor.json
+    ${executorfile}    Load JSON from file    ${executorpath}
+    ${environment}    Get value from JSON    ${response}    $..fields.customfield_10224[0]
+    ${environment}    Update value to JSON    ${executorfile}    $..Environment    ${environment}
+    Save JSON to file    ${executorfile}    ${executorpath}
+
+CRM_JiraConfigValue
+    ${configurator}    OperatingSystem.Get File    ${CURDIR}/../CRM/Inputdata/CRM_Config_file.txt
+    &{config}=    Convert string to JSON    ${configurator}
+    @{jiraurl}=    Get values from JSON    ${config}    $.Configurator[*].jiraurl
+    @{jirauname}=    Get values from JSON    ${config}    $.Configurator[*].jirauname
+    @{jirapwd}=    Get values from JSON    ${config}    $.Configurator[*].jirapwd
+    @{testplankey}=    Get values from JSON    ${config}    $.Configurator[*].testplankey
+    ${jiraurl}=    Convert To String    @{jiraurl}
+    ${jirauname}=    Convert To String    @{jirauname}
+    ${jirapwd}=    Convert To String    @{jirapwd}
+    ${testplankey}=    Convert To String    @{testplankey}
+    Set Global Variable    ${jiraurl}
+    Set Global Variable    ${jirauname}
+    Set Global Variable    ${jirapwd}
+    Set Global Variable    ${testplankey}
+    ${xrayjsonpath}    Set Variable    ${CURDIR}/../CommonResources/xray.json
+    ${xrayjson}    Load JSON from file    ${xrayjsonpath}
+    ${latestJson}    Update value to JSON    ${xrayjson}    $..testPlanKey    ${testplankey}
+    Save JSON to file    ${latestJson}    ${xrayjsonpath}

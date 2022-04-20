@@ -1,0 +1,273 @@
+*** Settings ***
+Library           DateTime
+Resource          ../Config/Resources.txt
+Resource          ../Locators/Selfcare_Locators.txt
+Library           OperatingSystem
+Library           String
+Library           XML
+Library           RPA.Database
+Library           RPA.JSON
+Library           RPA.Browser.Selenium
+Library           RPA.Desktop
+Library           FakerLibrary
+Library           RPA.Database
+Library           BuiltIn
+Library           String
+Library           RPA.Email.Exchange
+Library           Collections
+
+*** Keywords ***
+Take _Screenshot
+    ${dateTimeStampScreenshot}    Get Current Date    result_format=%d-%m-%Y-%H-%M-%S
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-${TEST NAME}-${dateTimeStampScreenshot}.png
+
+Selfcare_VariableValueRetreive
+    ${Username Value}    Set Variable    ${testData['UserName']}
+    Set Global Variable    ${Username Value}
+    ${Password Value}    Set Variable    ${testData['Password']}
+    Set Global Variable    ${Password Value}
+    ${Friend Name Value}    Set Variable    ${testData['Friend Name']}
+    Set Global Variable    ${Friend Name Value}
+    ${Friend Number Value}    Set Variable    ${testData['Friend Mobile Number']}
+    ${Friend Number Value}=    Convert To String    ${Friend Number Value}
+    Set Global Variable    ${Friend Number Value}
+    ${Credit Card Number Value}    Set Variable    ${testData['Credit Card Number']}
+    Set Global Variable    ${Credit Card Number Value}
+    ${Name on Credit Card Value}    Set Variable    ${testData['Name on Credit Card']}
+    Set Global Variable    ${Name on Credit Card Value}
+    ${Credit Card Expiry Value}    Set Variable    ${testData['Credit Card Expiry']}
+    Set Global Variable    ${Credit Card Expiry Value}
+    ${Credit Card CVV Value}    Set Variable    ${testData['Credit Card CVV']}
+    Set Global Variable    ${Credit Card CVV Value}
+    ${Reference ID}    Set Variable    ${Your Reference ID}
+    Set Global Variable    ${Reference ID}
+    #${Newpassword}    Set Variable    ${testData['New PWD']}
+    #Set Global Variable    ${Newpassword}
+
+SELFCARE_DatabaseConnect
+    Set Selenium Speed    0.5
+    #Connect To Database    cx_Oracle    ${config_modulename}    ${config_username_db}    ${config_pwd_db}    ${config_host}    ${config_port}
+    Connect To Database    cx_Oracle    scrregr    cakhicva    Tdejks#1234    172.24.247.46    1521
+    ${otpCode}    Query    select otpcode from DSL_PREPROD_services.otp where username='${Username Value}' order by otpid desc
+    #select otpcode from DSL_PREPROD_services.otp where username='${Username Value}' order by otpid desc
+    Log    ${otpCode[0][0]}
+    ${OTPCODE_VALUE}    Set variable    ${otpCode[0][0]}
+    Input Text When Element Is Visible    ${pin1}    ${OTPCODE_VALUE[0]}
+    Input Text When Element Is Visible    ${pin2}    ${OTPCODE_VALUE[1]}
+    Input Text When Element Is Visible    ${pin3}    ${OTPCODE_VALUE[2]}
+    Input Text When Element Is Visible    ${pin4}    ${OTPCODE_VALUE[3]}
+    Wait Until Element Is Visible    //span[@id='success-message']    120s
+    Input Text When Element Is Visible    ${password1}    ${Newpassword}
+    Input Text When Element Is Visible    ${password2}    ${Newpassword}
+    Click Element When Visible    ${SubmitLogin}
+
+Selfcare Login
+    open browser    @{config_URL}    chrome
+    Maximize Browser Window
+    Delete All Cookies
+    ${privacy_button}    BuiltIn.Run Keyword And Return Status    wait until element is visible    ${privacyError_AdvanceButton}    5s
+    IF    "${privacy_button}"=="True"
+    click element    ${privacyError_AdvanceButton}
+    click element    ${privacyError_ProceedLink}
+    END
+    wait until element is visible    ${Username}    300s
+    Input Text When Element Is Visible    ${Username}    ${Username Value}
+    Input Text When Element Is Visible    ${Password}    ${Password Value}
+    ${iFrameVisible}    Is Element Visible    //iframe[@name = 'webpush-bubble']
+    IF    "${iFrameVisible}" == "True"
+    Select Frame    name:webpush-bubble
+    Comment    wait until element is visible    ${ClosePopUp}    30s
+    Click Element If Visible    ${ClosePopUp}
+    Unselect Frame
+    END
+    Wait Until Element Is Visible    ${Login Button}    60s
+    Click Button When Visible    ${Login Button}
+
+Selfcare Logout
+    Wait Until Element Is Visible    ${Profile Icon}    60s
+    Click Element When Visible    ${Profile Icon}
+    Wait Until Element Is Visible    ${Logout} | ${Logout_L10}    80s
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-Selfcare_Logout Enterprise.png
+    Click Element When Visible    ${Logout} | ${Logout_L10}
+
+Verify Language
+    Wait Until Element Is Visible    ${Arabic Language}    120s
+    Click Element When Visible    ${Arabic Language}
+    Wait Until Element Is Visible    ${My Plans Tab}    60s
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-Selfcare_Verify Language.png
+    ${Verify Language}=    Get Text    ${My Plans Tab}
+    Log    ${Verify Language}
+    IF    "${Verify Language}" == "My Plans"
+    Log    Language Change Unsuccessful
+    Selfcare Logout
+    Fail
+    END
+
+Settings Tab
+    Wait Until Element Is Visible    ${Settings Tab}    30s
+    Click Element When Visible    ${Settings Tab}
+    #Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-Selfcare_Settings Tab.png
+
+Settings Tab_Payments
+    Wait Until Element Is Visible    ${Settings Tab_Payment Button}
+    Click Element When Visible    ${Settings Tab_Payment Button}
+    Wait Until Page Contains Element    //h3[contains(text(),'Save a credit card')]
+    #Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-Selfcare_Settings Tab_Payments.png
+
+Settings Tab_Payments_Add Friends or Family_Prepaid
+    Wait Until Element Is Visible    ${Friends & Family_Add Now Button}    60s
+    Scroll Element Into View    ${Friends & Family_Add Now Button}
+    Click Element When Visible    ${Friends & Family_Add Now Button}
+    Wait Until Element Is Visible    ${Add a Friend or Family_Friend's Name Input Field}    60s
+    Input Text When Element Is Visible    ${Add a Friend or Family_Friend's Name Input Field}    ${Friend Name Value}
+    Input Text When Element Is Visible    ${Add a Friend or Family_Friend's Number Input Field}    ${Friend Number Value}
+    Click Element When Visible    ${Add a Friend or Family_Save Button}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-Selfcare_Settings Tab_Payments_Add Friends or Family_Prepaid.png
+    Wait Until Element Is Visible    ${VerifyRecharge}    120s
+    Scroll Element Into View    ${VerifyRecharge}
+    ${Postpaid/Prepaid}=    Get Text    ${VerifyRecharge}
+    Log    ${Postpaid/Prepaid}
+    IF    "${Postpaid/Prepaid}" != "Recharge"
+    Log    The Given Number is not a Valid Prepaid Number
+    Click Element When Visible    ${Icon R}
+    Click Element When Visible    ${Icon R Logout}
+    END
+
+ACS Emulator
+    Wait Until Element Is Visible    ${ACS Emulator_Submit Button}    120s
+    Comment    BuiltIn.Sleep    60s
+    Comment    Click Element When Visible    ${ACS Emulator_Submit Button}
+
+Open_Selfcare_Browser
+    open browser    @{config_URL}    chrome
+    #open browser    @{config_URL}    headlesschrome
+    Maximize Browser Window
+    Delete All Cookies
+    #click element    ${privacyError_AdvanceButton}
+    #click element    ${privacyError_ProceedLink}
+
+Add Credit Card
+    ${condition}=    Run keyword And Return Status    Wait Until Element Is Visible    ${Credit Card Number_Input Field}    timeout=5    error=false
+    IF    '${condition}'=='True'
+    ${cardnofield}    Get WebElement    ${Credit Card Number_Input Field}
+    Execute Javascript    arguments[0].value='4916 5216 3463 4844';    ARGUMENTS    ${cardnofield}
+    ${cardnamefield}    Get WebElement    ${Credit Card Name_Input Field}
+    Execute Javascript    arguments[0].value='${Name on Credit Card Value}';    ARGUMENTS    ${cardnamefield}
+    ${expiryfield}    Get WebElement    ${Credit Card Expiry Date_Input Field}
+    Execute Javascript    arguments[0].value='08/25';    ARGUMENTS    ${expiryfield}
+    ${ccvfield}    Get WebElement    ${Credit Card CVV/CVC_Input Field}
+    Execute Javascript    arguments[0].value='${Credit Card CVV Value}';    ARGUMENTS    ${ccvfield}
+    END
+    ${condition}=    Run keyword And Return Status    Wait Until Element Is Visible    ${Credit Card Terms & Conditions_Check Box}    timeout=5    error=false
+    IF    '${condition}'=='True'
+    Scroll Element Into View    ${Credit Card Terms & Conditions_Check Box}
+    Click Element When Visible    ${Credit Card Terms & Conditions_Check Box}
+    END
+    ${condition}=    Run keyword And Return Status    Wait Until Element Is Visible    ${Add Credit Card_Save Button}    timeout=5    error=false
+    #Click Element When Visible    ${Add Credit Card_Save Button}
+    IF    '${condition}'=='True'
+    Scroll Element Into View    ${Add Credit Card_Save Button}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-Selfcare_Add Credit Card.png
+    Click Element When Visible    ${Add Credit Card_Save Button}
+    END
+
+Settings Tab_Payments_Add Friends or Family_Postpaid
+    Wait Until Element Is Visible    //a[contains(text(),'Add now')]    60s
+    Scroll Element Into View    //a[contains(text(),'Add now')]
+    Click Element When Visible    //a[contains(text(),'Add now')]
+    Wait Until Element Is Visible    //input[@id='saveFriendName']    60s
+    Input Text When Element Is Visible    //input[@id='saveFriendName']    ${Friend Name Value}
+    Input Text When Element Is Visible    //input[@id='saveFriendNumber']    ${Friend Number Value}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-Selfcare_Settings Tab_Payments_Add Friends or Family_Postpaid.png
+    Click Element When Visible    //button[@class='primary-btn--primary-color small-width-100 js-btn-send']
+    Wait Until Element Is Visible    ${VerifyRecharge}    60s
+    Scroll Element Into View    ${VerifyRecharge}
+    ${Postpaid/Prepaid}=    Get Text    ${VerifyRecharge}
+    IF    "${Postpaid/Prepaid}" != "Recharge"
+    Log    The Given Number is not a Valid Prepaid Number
+    Click Element When Visible    ${Icon R}
+    Click Element When Visible    ${Icon R Logout}
+    END
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-Selfcare_AddFriend.png
+
+Remove Friends or Family_Postpaid
+    set selenium speed    0.4s
+    Wait Until Element Is Visible    //a[contains(text(),'Add now')]
+    Scroll Element Into View    //a[contains(text(),'Add now')]
+    Wait Until Element Is Visible    //div[contains(text(),'${Friend Number Value}')]
+    Log    ${Friend Number Value}
+    Click Element When Visible    //div[contains(text(),'${Friend Number Value}')]/preceding-sibling::a
+    Wait Until Element Is Visible    //form/input[@name='accNumber'][@value='${Friend Number Value}']/following-sibling::input    60s
+    Click Element When Visible    //form/input[@name='accNumber'][@value='${Friend Number Value}']/following-sibling::input
+    Wait Until Element Is Visible    ${confirmRemoveButton}    60s
+    Click Element When Visible    ${confirmRemoveButton}
+    Wait Until Element Is Visible    ${SuccessMsg}    100s
+    Wait Until Element Is Visible    //*[@id="du-notification"]/div/div/div/button/span[@aria-hidden='true']    60s
+    Click Element    //*[@id="du-notification"]/div/div/div/button/span[@aria-hidden='true']
+    Scroll Element Into View    //a[contains(text(),'Add now')]
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-Remove.png
+    Click Element When Visible    //span[@class='label']
+    Click Element When Visible    //a[contains(text(),'Logout')]
+
+Verify Add Credit Card
+    #Wait Until Page Contains Element    //div[@class="page-loader-box js-page-loader loading"]    60s
+    #Wait Until Page Does Not Contain Element    //div[@class="page-loader-box js-page-loader loading"]    60s
+    Wait Until Element Is Visible    //h3[contains(text(),'Saved card')]    60s
+    ${SaveCard}=    BuiltIn.Run Keyword And Return Status    Element Should Be Visible    //a[contains(text(),'Remove a saved card')]
+    Run Keyword If    ${SaveCard}    Selfcare Logout
+    ...    ELSE    Fail
+
+Verify Saved Card
+    Wait Until Element Is Visible    //h3[contains(text(),'Set auto payment')]    60s
+    ${Removesavedcard}=    BuiltIn.Run Keyword And Return Status    Element Should Be Visible    ${Remove a Saved Card_Button}
+    Run Keyword If    ${Removesavedcard}    Remove Saved Card
+    ...    ELSE    No Saved Card
+
+No Saved Card
+    Log    There is No Card Saved
+    Selfcare Logout
+    Fail
+    Wait Until Page Contains Element    //div[@class="page-loader-box js-page-loader loading"]    60s
+    Wait Until Page Does Not Contain Element    //div[@class="page-loader-box js-page-loader loading"]    60s
+
+Remove Saved Card
+    Wait Until Element Is Visible    ${Remove a Saved Card_Button}    60s
+    Scroll Element Into View    ${Remove a Saved Card_Button}
+    Click Element When Visible    ${Remove a Saved Card_Button}
+    Wait Until Element Is Visible    ${Remove Saved Card_Confirm Button}    60s
+    Click Element When Visible    ${Remove Saved Card_Confirm Button}
+    Wait Until Page Contains Element    //div[@class="page-loader-box js-page-loader loading"]    60s
+    Wait Until Page Does Not Contain Element    //div[@class="page-loader-box js-page-loader loading"]    60s
+
+Verify AutoPayment De-activated
+    Wait Until Element Is Visible    //h3[contains(text(),'Friends and family')]    60s
+    Scroll Element Into View    //h3[contains(text(),'Friends and family')]
+    ${Autopaymentstatus}=    BuiltIn.Run Keyword And Return Status    Element Should Be Visible    //button[contains(text(),'Set auto payment')]
+    Run Keyword If    ${Autopaymentstatus}    Selfcare Logout
+    ...    ELSE    Fail
+
+Open Login Page
+    open browser    @{config_URL}    chrome
+    Maximize Browser Window
+    Delete All Cookies
+    click element    ${privacyError_AdvanceButton}
+    click element    ${privacyError_ProceedLink}
+    wait until element is visible    ${Username}    300s
+
+Check Usage History
+    wait until element is visible    ${My Plans Tab}    60s
+    ${req_cnt}    Get Element Count    ${MenuVerify}
+    Run Keyword If    ${req_cnt}==1    click element    ${MenuVerify}
+    wait until element is visible    ${Prepaid Menu Link}
+    Click Element When Visible    ${Prepaid Menu Link}
+    wait until element is visible    ${Prepaid History}    10s
+    Scroll Element Into View    ${Prepaid History}
+    Click Element When Visible    ${Prepaid History}
+    wait until element is visible    ${Prepaid MyUsage}    10s
+    Scroll Element Into View    ${Prepaid MyUsage}
+    Click Element When Visible    ${Prepaid MyUsage}
+    Wait Until Element Is Visible    ${Prepaid History All}    20s
+    Click Element When Visible    ${Prepaid History All}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-Selfcare_MyUsage.png
+    Click Element When Visible    ${Icon R}
+    Click Element When Visible    ${Icon R Logout}

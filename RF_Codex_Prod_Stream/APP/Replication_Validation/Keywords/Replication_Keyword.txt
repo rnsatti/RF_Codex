@@ -1,0 +1,613 @@
+*** Settings ***
+Library           DateTime
+Resource          ../../CommonResources/Resources.txt
+Resource          ../Locators/Replication_locators.txt
+Library           OperatingSystem
+Library           String
+Resource          ../../CommonResources/Setup_TearDown.txt
+Library           XML
+Library           RPA.Database
+Library           RPA.JSON
+Library           RPA.Browser.Selenium
+Library           RPA.Desktop
+Library           FakerLibrary
+Library           RPA.Database
+Library           BuiltIn
+Library           String
+Library           RPA.Email.Exchange
+Library           rpaframework-recognition
+Library           Process
+Library           CSVLibrary
+
+*** Keywords ***
+Take_Screenshot
+    ${dateTimeStampScreenshot}    Get Current Date    result_format=%d-%m-%Y-%H-%M-%S
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-${TEST NAME}-${dateTimeStampScreenshot}.png
+
+Replication_VariableValueRetreive
+    Log    ${testData['LoadURL']}
+    ${url}    Set Variable    ${testData['LoadURL']}
+    Set Global Variable    ${url}
+    ${modulename}    Set Variable    ${testData['modulename']}
+    Set Global Variable    ${modulename}
+    ${username_db}    Set Variable    ${testData['username_db']}
+    Set Global Variable    ${username_db}
+    ${pwd_db}    Set Variable    ${testData['pwd_db']}
+    Set Global Variable    ${pwd_db}
+    ${host}    Set Variable    ${testData['host']}
+    Set Global Variable    ${host}
+    ${port}    Set Variable    ${testData['port']}
+    Set Global Variable    ${port}
+    ${login_username_value}    Set Variable    ${testData['UserName']}
+    Set Global Variable    ${login_username_value}
+    ${login_password_value}    Set Variable    ${testData['Password']}
+    Set Global Variable    ${login_password_value}
+    ${Contract_Code}    Set Variable    ${testData['Contract_Code']}
+    Set Global Variable    ${Contract_Code}
+    ${Quantity}    Set Variable    ${testData['Quantity']}
+    Set Global Variable    ${Quantity}
+    ${database}    Set Variable    ${testData['cx_Oracle']}
+    Set Global Variable    ${database}
+    ${HPSA_URL}    Set Variable    ${testData['HPSA_URL']}
+    Set Global Variable    ${HPSA_URL}
+    ${HSPA_Username}    Set Variable    ${testData['HSPA_Username']}
+    Set Global Variable    ${HSPA_Username}
+    ${HSPA_Password}    Set Variable    ${testData['HSPA_Password']}
+    Set Global Variable    ${HSPA_Password}
+    ${RequestSearchDropDownValue}    Set Variable    ${testData['RequestSearchDropDownValue']}
+    Set Global Variable    ${RequestSearchDropDownValue}
+    ${AccountNumber}    Set Variable    ${testData['AccountNumber']}
+    Set Global Variable    ${AccountNumber}
+    ${L10_CompanyName}    Set Variable    ${testData['L10_CompanyName']}
+    Set Global Variable    ${L10_CompanyName}
+    ${RatePlan_Name}    Set Variable    ${testData['RatePlan_Name']}
+    Set Global Variable    ${RatePlan_Name}
+    ${BSCS_Url}    Set Variable    ${testData['BSCS_Url']}
+    Set Global Variable    ${BSCS_Url}
+    ${BSCS_Username}    Set Variable    ${testData['BSCS_Username']}
+    Set Global Variable    ${BSCS_Username}
+    ${BSCS_Password}    Set Variable    ${testData['BSCS_Password']}
+    Set Global Variable    ${BSCS_Password}
+    ${Smart_offer}    Set Variable    ${testData['Smart_offer']}
+    Set Global Variable    ${Smart_offer}
+    ${Data_Bundle}    Set Variable    ${testData['Data_Bundle']}
+    Set Global Variable    ${Data_Bundle}
+
+MDSRRTAB Table Check
+    Connect To Database    ${database}    ${modulename}    ${username_db}    ${pwd_db}    ${host}    ${port}
+    ${coid}    Query    select co_id from contract_all where co_code='${Contract_Code}'
+    @{res}    Get Rows    mdsrrtab    columns=co_id    conditions=co_id='${coid[0][0]}'
+    Log many    @{res}
+    Pass Execution If    ${res}!=[]    mdsrrtab Table Not Empty
+    Log    mdsrrtab Table Empty
+    Disconnect From Database
+
+Open_BSCS_Browser
+    #Opening BSCS Browser
+    Open Browser    ${url}    chrome
+    Maximize Browser Window
+    Title Should Be    Login
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-Open_BSCS_Browser.png
+
+Replication_BSCS Login
+    #BSCSLogin Page Information
+    InputText    ${login_username}    ${login_username_value}
+    InputText    ${login_password}    ${login_password_value}
+    Click Button    ${login_button}
+    Wait Until Element Contains    ${selectsalescheck}    ${selectsalescheck_value}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-BSCS_Login.png
+
+Replication_BSCS ConsumerSalesClick
+    Log    Clicking on Consumer Sales Partner Code
+    Wait Until Element Contains    ${selectsalescheck}    ${selectsalescheck_value}
+    Click Element If Visible    ${Tablewait}
+    Click Button    ${okclick}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-BSCS_ConsumerSalesClick.png
+
+Replication_BSCS EnterPriseClick
+    Wait Until Element Contains    ${selectsalescheck}    ${selectsalescheck_value}
+    Click Element If Visible    ${enterpriseclick}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-EnterPriseClick.png
+    Click Button    ${okclick}
+
+Replication_BSCS SearchContract
+    Comment    Wait Until Element Contains    ${ContractsLink}    timeout=30s
+    Click Element When Visible    ${ContractsLink}
+    Click Element    ${SearchForContaractsLink}
+    Input Text When Element Is Visible    ${Inputcontractcode}    ${Contract_Code}
+    Click Element    ${submitbutton}
+    Wait Until Page Contains Element    ${ContractDrillDown}    timeout=30s
+    Click Element    ${ContractDrillDown}
+
+Replication_BSCS Contract Overview Page
+    Wait Until Page Contains    ${ContractOverviewText}    timeout=30s
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-OverviewPage.png
+    Click Element    ${AssignAdditionalServicesLink}
+
+Replication_BSCS Select services
+    Wait Until Page Contains    ${SelectServicesText}    timeout=30s
+    Click Element    ${ExpandOptionalServices}
+    Scroll Element Into View    ${ExpandOptionalServices}
+    Wait Until Element Is Visible    ${InternetCallingPackPostPaid}    timeout=50s
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-InternetCallingPackPostPaid.png
+    Click Element    ${InternetCallingPackPostPaid}
+    Click Element When Visible    ${NextStepButton}
+
+Replication_BSCS Configure services
+    Wait Until Page Contains    ${ConfigureServicesText}    timeout=30s
+    Click Element When Visible    ${ContractDrillDown}
+    Input Text When Element Is Visible    ${InputQuantity}    ${Quantity}
+    Click Element When Visible    ${SetQuantityButton}
+    Click Element When Visible    ${CloseButton}
+    Click Element When Visible    ${ConfigureServicesNextButton}
+    Select From List By Label    ${ServiceStatusDropdownName}    ${ServiceStatusDropdownValue}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ServiceStatusDropdownName.png
+    Click Element    ${FinishButton}
+
+Replication_BSCS Search For Network
+    Click Element When Visible    ${ExpandNetworkLink}
+    Click Element    ${SearchForRequestLink}
+    Click Element    ${SuccessfulCheckBox}
+    Click Element    ${submitbutton}
+
+Replication_BSCS Fetch Request ID Initial Activation
+    Wait Until Element Is Visible    ${GetRequestIDValueInitialActivation}    timeout=30s
+    ${RequestId}    Get Text    ${GetRequestIDValueInitialActivation}
+    ${RequestId} =    Remove String    ${RequestId}    ,
+    Log    ${RequestId}
+    Set Global Variable    ${RequestId}
+
+Replication_BSCS Fetch Request ID Ref Text Assign Service
+    Wait Until Element Is Visible    ${GetRequestIDValueAssign Service}    timeout=30s
+    ${RequestId}    Get Text    ${GetRequestIDValueAssign Service}
+    ${RequestId} =    Remove String    ${RequestId}    ,
+    Log    ${RequestId}
+    Set Global Variable    ${RequestId}
+
+Replication_BSCS Fetch Request ID Change Port
+    Wait Until Element Is Visible    ${GetRequestIDValueChangePort}    timeout=30s
+    ${RequestId}    Get Text    ${GetRequestIDValueChangePort}
+    ${RequestId} =    Remove String    ${RequestId}    ,
+    Log    ${RequestId}
+    Set Global Variable    ${RequestId}
+
+Replication_HPSA Login
+    Open Browser    ${HPSA_URL}    chrome
+    Maximize Browser Window
+    Wait Until Element Is Visible    ${HSPA_login_username}    timeout=30s
+    Input Text    ${HSPA_login_username}    ${HSPA_Username}
+    Input Text    ${HSPA_login_Password}    ${HSPA_Password}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-HPSALogin.png
+    Click Element    ${HSPALoginButton}
+
+Replication_Search With Request ID
+    Wait Until Page Contains Element    ${DetailedReport}
+    Click Element    ${DetailedReport}
+    Wait Until Element Is Visible    ${RequestLink}    30s
+    Click Link    ${RequestLink}
+    Wait Until Page Contains Element    ${SearchIcon}
+    Click Element    ${SearchIcon}
+    Select From List By Label    ${SearchRequestDropDown}    ${RequestSearchDropDownValue}
+    Input Text    ${InputRequestID}    ${RequestId}
+    Click Element    ${SearchButton}
+    Click Element    ${SearchCloseButton}
+    RPA.Browser.Selenium.Element Text Should Be    ${ResponseCode}    OK
+    Log    Response Code is OK
+    Double Click Element    ${ResponseCode}
+
+Replication_HSPA Validate CSDB
+    Wait Until Page Contains Element    ${CSBDStatus}    30s
+    Element Text Should Be    ${CSBDStatus}    OK
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ValidateCSDB.png
+    Log    CSDB Status is OK
+
+Replication_HSPA Validate PCRF
+    Wait Until Page Contains Element    ${PCRFStatus}    30s
+    Element Text Should Be    ${PCRFStatus}    OK
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ValidatePCRF.png
+    Log    PCRF Status is OK
+
+Replication_HSPA Validate SM
+    Wait Until Page Contains Element    ${SMStatus}    30s
+    Element Text Should Be    ${SMStatus}    OK
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ValidateSM.png
+    Log    SM Status is OK
+
+Replication_HSPA Validate AES_REST1
+    Wait Until Page Contains Element    ${AES_REST1Status}    30s
+    Element Text Should Be    ${AES_REST1Status}    OK
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ValidateAES_REST1.png
+    Log    AES1 Status is OK
+
+Replication_HSPA Validate AES_REST2
+    Wait Until Page Contains Element    ${AES_REST2Status}    30s
+    Element Text Should Be    ${AES_REST2Status}    OK
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ValidateAES_REST2.png
+    Log    AES2 Status is OK
+
+Replication_HSPA Validate DPI
+    Wait Until Page Contains Element    ${DPIStatus}    30s
+    Element Text Should Be    ${DPIStatus}    OK
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ValidateDPI.png
+    Log    DPI Status is OK
+
+Replication_HSPA Validate AIR
+    Wait Until Page Contains Element    ${AIRStatus}    30s
+    Element Text Should Be    ${AIRStatus}    OK
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ValidateAIR.png
+    Log    AIR Status is OK
+
+Replication_HSPA Validate AES_REST
+    Wait Until Page Contains Element    ${AES_RESTStatus}    30s
+    Element Text Should Be    ${AES_RESTStatus}    OK
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-AES_REST.png
+    Log    AES REST Status is OK
+
+Replication_HSPA Validate CIS
+    Wait Until Page Contains Element    ${CISStatus}    30s
+    Element Text Should Be    ${CISStatus}    OK
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-CIS.png
+    Log    CIS REST Status is OK
+
+Replication_CRM Load URL
+    Log    ${url}
+    RPA.Browser.Selenium.Open Browser    ${url}    ie
+    Maximize Browser Window
+    Delete All Cookies
+
+Replication_CRM Login
+    RPA.Desktop.Wait for element    image:${CRM_IMAGE_DIR}${/}du.png    timeout=100
+    #RPA.Desktop.Wait for element    image:${CRM_IMAGE_DIR}${/}UserID.png    timeout=30
+    Input Text    ${CRM_UserName}    ${login_username_value}
+    Click Element    ${CRM_Password}
+    Input Text    ${CRM_Password}    ${login_password_value}
+    RPA.Desktop.Move mouse    ${CRMlogin}    timeout=100
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-CRMLogin.png
+    Click
+
+Cache_Clearance
+    RPA.Desktop.Press keys    ctrl    shift    delete
+    RPA.Desktop.Move mouse    ${DeleteImage}    timeout=100
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-Cache_Clearance.png
+    Click
+
+Compatibility View Setting
+    RPA.Desktop.Wait for element    ${ToolImage}    timeout=100
+    RPA.Desktop.Move mouse    ${ToolImage}
+    Click
+    Sleep    5 seconds
+    RPA.Desktop.Press keys    B
+    Sleep    5 seconds
+    RPA.Desktop.Press keys    Delete
+    Type Text Into    ${compatibility_ipImage}    ${compatibility_ip}
+    RPA.Desktop.Move mouse    ${AddImage}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-CompatibilityViewAdd.png
+    Click
+    RPA.Desktop.Move mouse    ${closeImage}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-CompatibilityViewClose.png
+    Click
+    Set Selenium Implicit Wait    150 seconds
+
+Replication_CRM Search For Contract
+    RPA.Desktop.Wait for element    ${servicesImage}    timeout=100
+    RPA.Desktop.Move mouse    ${servicesImage}
+    Click
+    Click
+    RPA.Desktop.Wait for element    ${ServiceIDImage}    timeout=100
+    RPA.Desktop.Move mouse    image:${CRM_IMAGE_DIR}${/}ServiceID.png
+    Click
+    Type Text Into    ${ServiceIDImage}    ${Contract_Code}
+    RPA.Desktop.Wait for element    ${GoImage}    timeout=100
+    RPA.Desktop.Move mouse    ${GoImage}
+    Click
+    Click
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-SearchForContract.png
+    RPA.Desktop.Wait for element    ${ContractDrillDownImage}    timeout=100
+    RPA.Desktop.Move mouse    ${ContractDrillDownImage}
+    Click
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-ContractDrillDown.png
+    Sleep    3s
+
+Replication_CRM ForeclosureDetails
+    RPA.Desktop.Wait for element    ${ForeclosureDetailsImage}    timeout=100
+    RPA.Desktop.Move mouse    ${ForeclosureDetailsImage}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-ForeclosureDetails.png
+    Click
+    Sleep    10s
+
+Replication_CRM Databundle Details
+    RPA.Desktop.Wait for element    ${DatabundleDetailsImage}    timeout=100
+    RPA.Desktop.Move mouse    ${DatabundleDetailsImage}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-DatabundleDetails.png
+    Click
+    Sleep    10s
+
+Replication_CRM Page Down 1
+    RPA.Desktop.Wait for element    ${pagedown1Image}    timeout=100
+    RPA.Desktop.Move mouse    ${pagedown1Image}
+    Click
+
+Replication_CRM Page Down 2
+    RPA.Desktop.Wait for element    ${pagedown2Image}    timeout=100
+    RPA.Desktop.Move mouse    ${pagedown2Image}
+    Click
+
+Replication_CRM ExternalInfo
+    RPA.Desktop.Press keys    page_down
+    RPA.Desktop.Wait for element    ${ExternalInfoImage}    timeout=100
+    RPA.Desktop.Move mouse    ${ExternalInfoImage}
+    Click
+    Sleep    2s
+    RPA.Desktop.Wait for element    ${ExternalInfoDropdownImage}    timeout=100
+    RPA.Desktop.Move mouse    ${ExternalInfoDropdownImage}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-ExternalInfoDropdown.png
+    Click
+
+Replication_CRM Validate Smart Offer Activation
+    RPA.Desktop.Wait for element    ${OffernamecheckImage}    timeout=100
+    RPA.Desktop.Move mouse    ${OffernamecheckImage}
+    ${yoffeset}=    Set Variable    0
+    FOR    ${i}    IN RANGE    9999999
+        ${yoffeset}=    Evaluate    ${yoffeset} + 22
+        Log    ${yoffeset}
+        Move mouse    offset:0,${yoffeset}
+        Click
+        Click
+        Sleep    5s
+        RPA.Desktop.Press Mouse Button    right
+        RPA.Desktop.Release Mouse Button    right
+        RPA.Desktop.Wait for element    ${SelectallImage}    timeout=100
+        RPA.Desktop.Move mouse    ${SelectallImage}
+        Click
+        Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-SmartOfferActivationselectall.png
+        RPA.Desktop.Press keys    ctrl    c
+        RPA.Desktop.Press keys    ctrl    c
+        ${getoffervalue}=    run process    python    ${ClipboardPasteProcess}
+        ${getoffervalue}    Set Variable    ${getoffervalue.stdout}
+        Log    ${getoffervalue}
+        Exit For Loop If    "${getoffervalue}"=="${Smart_offer}"
+        RPA.Desktop.Wait for element    ${OffernamecheckImage}    timeout=100
+        RPA.Desktop.Move mouse    ${OffernamecheckImage}
+    END
+
+Replication_CRM Validate DataBundle Activation
+    RPA.Desktop.Wait for element    ${QuotaNameImage}    timeout=100
+    RPA.Desktop.Move mouse    ${QuotaNameImage}
+    ${yoffeset}=    Set Variable    0
+    FOR    ${i}    IN RANGE    9999999
+        ${yoffeset}=    Evaluate    ${yoffeset} + 22
+        Log    ${yoffeset}
+        Move mouse    offset:0,${yoffeset}
+        Click
+        Click
+        Sleep    5s
+        RPA.Desktop.Press Mouse Button    right
+        RPA.Desktop.Release Mouse Button    right
+        RPA.Desktop.Wait for element    ${SelectallImage}    timeout=100
+        RPA.Desktop.Move mouse    ${SelectallImage}
+        Click
+        Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-DataBundleActivationselectall.png
+        RPA.Desktop.Press keys    ctrl    c
+        RPA.Desktop.Press keys    ctrl    c
+        ${quotaValue}=    run process    python    ${ClipboardPasteProcess}
+        ${quotaValue}    Set Variable    ${quotaValue.stdout}
+        Log    ${quotaValue}
+        Exit For Loop If    "${quotaValue}"=="${Data_Bundle}"
+        RPA.Desktop.Wait for element    ${QuotaNameImage}    timeout=100
+        RPA.Desktop.Move mouse    ${QuotaNameImage}
+    END
+
+Replication_CRM Search Account
+    Sleep    5s
+    RPA.Desktop.Wait for element    ${AccountsImage}    timeout=100
+    RPA.Desktop.Move mouse    ${AccountsImage}
+    Click
+    Sleep    10s
+    RPA.Desktop.Wait for element    ${AccountCodeImage}    timeout=100
+    RPA.Desktop.Move mouse    ${AccountCodeImage}
+    Click
+    Sleep    3s
+    Type Text Into    ${AccountCodeImage}    ${AccountNumber}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-SearchAccount.png
+    Sleep    3s
+    RPA.Desktop.Wait for element    ${GoImage}    timeout=100
+    RPA.Desktop.Move mouse    ${GoImage}
+    Click
+    Clear Clipboard
+
+Replication_CRM Validate Enterprise Account Creation
+    RPA.Desktop.Wait for element    ${NotEmptyCheckImage}    timeout=100
+    RPA.Desktop.Move mouse    ${NotEmptyCheckImage}
+    Click
+    Move mouse    offset:0,25
+    Sleep    10s
+    Click
+    RPA.Desktop.Press Mouse Button    right
+    RPA.Desktop.Release Mouse Button    right
+    RPA.Desktop.Wait for element    ${SelectallImage}    timeout=100
+    RPA.Desktop.Move mouse    ${SelectallImage}
+    Click
+    RPA.Desktop.Press keys    ctrl    c
+    ${AccountCode}=    Get clipboard value
+    Log    ${AccountCode}
+    IF    ${AccountCode}==${AccountNumber}
+    Log    Replication of Enterprise account creation to CRM
+    ELSE
+    Log    No Rows Returned or Wrong Account Code
+    END
+
+Replication_CRM Find And Copy Contract Code
+    RPA.Desktop.Wait for element    ${ContractImage}    timeout=100
+    RPA.Desktop.Move mouse    ${ContractImage}
+    Click
+    Move mouse    offset:50,4
+    Sleep    10s
+    Click
+    RPA.Desktop.Press Mouse Button    right
+    RPA.Desktop.Release Mouse Button    right
+    RPA.Desktop.Wait for element    ${SelectallImage}    timeout=100
+    RPA.Desktop.Move mouse    ${SelectallImage}
+    Click
+    RPA.Desktop.Wait for element    ${ContractImage}    timeout=100
+    RPA.Desktop.Move mouse    ${ContractImage}
+    Click
+    Move mouse    offset:50,4
+    RPA.Desktop.Press Mouse Button    right
+    RPA.Desktop.Release Mouse Button    right
+    RPA.Desktop.Wait for element    ${CopyImage}    timeout=100
+    RPA.Desktop.Move mouse    ${CopyImage}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-CopyContractCode.png
+    Click
+
+Compare Contract Code
+    ${result}=    run process    python    ${ClipboardPasteProcess}
+    Should be equal as strings    ${result.stdout}    ${Contract_Code}
+    Log    Contract Code Validated Successfully
+
+Replication_CRM Find And Copy Rate Plan
+    RPA.Desktop.Wait for element    ${RateplanImage}    timeout=100
+    RPA.Desktop.Move mouse    ${RateplanImage}
+    Click
+    Move mouse    offset:50,4
+    Sleep    10s
+    Click
+    RPA.Desktop.Press Mouse Button    right
+    RPA.Desktop.Release Mouse Button    right
+    RPA.Desktop.Wait for element    ${SelectallImage}    timeout=100
+    RPA.Desktop.Move mouse    ${SelectallImage}
+    Click
+    RPA.Desktop.Wait for element    ${RateplanImage}    timeout=100
+    RPA.Desktop.Move mouse    ${RateplanImage}
+    Click
+    Move mouse    offset:50,4
+    RPA.Desktop.Press Mouse Button    right
+    RPA.Desktop.Release Mouse Button    right
+    RPA.Desktop.Wait for element    ${CopyImage}    timeout=100
+    RPA.Desktop.Move mouse    ${CopyImage}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-CopyRatePlan.png
+    Click
+
+Compare RatePlan
+    ${result}=    run process    python    ${ClipboardPasteProcess}
+    Should be equal as strings    ${result.stdout}    ${RatePlan_Name}
+    Log    Rate Plan Validated Successfully
+
+Close Browser
+    Close All Browsers
+
+Get Account Code Change Sim
+    Connect To Database    ${database}    ${modulename}    ${username_db}    ${pwd_db}    ${host}    ${port}
+    ${res}    Query    ${co_codeQuery}
+    Log    ${res[4][0]}
+    ${Contract_Code}    Set Variable    ${res[4][0]}
+    Set Global Variable    ${Contract_Code}
+    ${Account}    Query    select custcode from customer_all where customer_id in(select customer_id from contract_all where co_code='${Contractcode}')
+    Log    ${Account[0][0]}
+    ${AccountNumber}    Set Variable    ${Account[0][0]}
+    Set Global Variable    ${AccountNumber}
+
+Replication_CRM Account Drilldown
+    RPA.Desktop.Wait for element    ${AccountnameImage}    timeout=100
+    RPA.Desktop.Move mouse    ${AccountnameImage}
+    Move mouse    offset:0,30
+    Click
+
+Replication_CRM Services And Installed Assets
+    RPA.Desktop.Wait for element    ${pagedownCheck3Image}    timeout=100
+    RPA.Desktop.Move mouse    ${pagedownCheck3Image}
+    Click
+    RPA.Desktop.Press keys    page_down
+    RPA.Desktop.Press keys    page_down
+    RPA.Desktop.Press keys    page_down
+    RPA.Desktop.Wait for element    ${ServicesAndInstalledAssetsImage}    timeout=100
+    RPA.Desktop.Move mouse    ${ServicesAndInstalledAssetsImage}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-ServicesAndInstalledAssets.png
+    Click
+    RPA.Desktop.Wait for element    ${productImage}    timeout=100
+    RPA.Desktop.Move mouse    ${productImage}
+    ${yoffeset}=    Set Variable    0
+    Comment    Move mouse    offset:0,30
+    FOR    ${i}    IN RANGE    9999999
+        ${yoffeset}=    Evaluate    ${yoffeset} + 25
+        Log    ${yoffeset}
+        Move mouse    offset:0,${yoffeset}
+        Click
+        RPA.Desktop.Press keys    TAB
+        RPA.Desktop.Press keys    TAB
+        Sleep    5s
+        RPA.Desktop.Press keys    ctrl    c
+        RPA.Desktop.Press keys    ctrl    c
+        ${result}=    run process    python    ${ClipboardPasteProcess}
+        ${testresult}    Set Variable    ${result.stdout}
+        Log    ${testresult}
+        Exit For Loop If    "${testresult}" == "${Contract_Code}"
+        RPA.Desktop.Wait for element    ${productImage}    timeout=100
+        RPA.Desktop.Move mouse    ${productImage}
+        Click
+    END
+
+Replication_CRM Fetch Sim Number
+    Move mouse    offset:3,25
+    Sleep    2s
+    Click
+    RPA.Desktop.Press keys    TAB
+    Sleep    2s
+    RPA.Desktop.Press keys    ctrl    c
+    RPA.Desktop.Press keys    ctrl    c
+    ${SimCardNo}=    run process    python    ${ClipboardPasteProcess}
+    ${SimNumber}    Set Variable    ${SimCardNo.stdout}
+    Set Global Variable    ${SimNumber}
+    Log    ${SimNumber}
+
+Replication_BSCS Sim Database
+    Connect To Database    ${database}    ${modulename}    ${username_db}    ${pwd_db}    ${host}    ${port}
+    ${res}    Query    ${bscs_simQuery}
+    Log    ${res[1][0]}
+    ${newSimNumber}    Set Variable    ${res[1][0]}
+    Set Global Variable    ${newSimNumber}
+
+Replication_BSCS Change Sim
+    Open Browser    ${BSCS_Url}    chrome
+    Maximize Browser Window
+    Title Should Be    Login
+    InputText    ${login_username}    ${BSCS_Username}
+    InputText    ${login_password}    ${BSCS_Password}
+    Click Button    ${login_button}
+    Wait Until Element Contains    ${selectsalescheck}    ${selectsalescheck_value}
+    Replication_BSCS ConsumerSalesClick
+    Replication_BSCS SearchContract
+    Click Element    ${bscs_replaceDeviceButton}
+    Wait Until Element Is Visible    ${bscs_searchButton}    30s
+    Click Element    ${bscs_searchButton}
+    Replication_BSCS Sim Database
+    Input Text When Element Is Visible    ${inputSimNo}    ${newSimNumber}
+    Click Element When Visible    ${bscs_SimSearchButton}
+    Click Element When Visible    ${bscs_SimOKButton}
+    Select From List By Label    ${bscs_reason}    ${bscs_reasonValue}
+    Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME}-${TEST NAME}-BSCSChangeSim.png
+    Click Element When Visible    ${bscs_SimOKButton}
+
+Replication_CRM Check New Sim
+    Replication_CRM Load URL
+    Cache_Clearance
+    Compatibility View Setting
+    Replication_CRM Login
+    Replication_CRM Search Account
+    Replication_CRM Account Drilldown
+    Replication_CRM Services And Installed Assets
+    Replication_CRM Fetch Sim Number
+
+Replication_BSCS Compare Sim Number
+    IF    "${SimNumber}" == "${newSimNumber}"
+    Log    Change Sim Successful
+    ELSE
+    Log    Change Sim Failed or Not Reflected in CRM
+    END
+
+Replication_CRM Logout
+    RPA.Desktop.Wait for element    ${FileImage}    timeout=100
+    RPA.Desktop.Move mouse    ${FileImage}
+    Click
+    RPA.Desktop.Wait for element    ${LogoutImage}    timeout=100
+    RPA.Desktop.Move mouse    ${LogoutImage}
+    Click

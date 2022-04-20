@@ -1,0 +1,29 @@
+Flag,JiraID,TestcaseID,UserName,Password,Friend Mobile Number,Friend Name,Credit Card Number,Name on Credit Card,Credit Card Expiry,Credit Card CVV
+Y,QAD-45354,Selfcare Consumer TC_Verify_PrepaidQuickRecharge,,,559646655,Mohan,5123450000000010,Testing,139,123
+Y,QAD-45362,Selfcare Consumer  TC_Verify_PostpaidQuickPay,,,971555100171,,5123450000000010,Testing,139,123
+Y,QAD-45357,Selfcare Consumer TC_Verify_AddCreditCard,1.28114454,test66,,,5123450000000010,Testing,139,123
+Y,QAD-45353,Selfcare Consumer TC_Verify_PostpaidPayment,1.28114454,test66,,,5123450000000010,Testing,139,123
+Y,QAD-45361,Selfcare Consumer TC_Verify_PrepaidRecharge,1.28114454,test66,971555679371,,5123450000000010,Testing,139,123
+Y,QAD-46623,Selfcare TC_Verify_PostpaidRemoveCreditCard,1.28114454,test66,,,5123450000000010,Testing,139,123
+Y,QAD-45367,Selfcare TC_Verify_LoggedInPrepaidQuickRecharge,1.28114454,test66,,,5123450000000010,Testing,139,123
+Y,QAD-45368,Selfcare TC_Verify_LoogedInPostpaidQuickPay,1.28114454,test66,,,5123450000000010,Testing,139,123
+Y,QAD-45371,Selfcare TC_Verify_PostpaidAutoPaymentFriendPostpaid,1.28114454,test66,,,5123450000000010,Autopay,139,123
+Y,QAD-46624,Selfcare TC_Verify_DeactivateAutoPayment,1.28114454,test66,,,5123450000000010,Autopay,139,123
+Y,QAD-46625,Selfcare TC_Verify_DashboardPostpaid,Srinivas.podugu@du.ae,Home@Dubai34,,,,,,
+Y,QAD-46626,Selfcare TC_Verify_DashboardPrepaid,971529326780,Tech@2191,971529326780,,,,,
+Y,QAD-45369,Selfcare TC_Verify_ChangeLanguageToArabic,1.28114454,test66,,,,,,
+Y,QAD-46627,Selfcare TC_Verify_DashboardEnterprisePostpaid,971559533516,Blore@1986,971559530255,,,,,
+Y,QAD-45365,Selfcare Autopayment TC_Validate Set auto payment with same CC details,1.28013908,Test123,,,,,,123
+Y,QAD-45366,Selfcare Quick Pay TC_Validate_Quick Pay_Complete Bill Paymnet for Suspended Account,,,,,,,139,
+Y,QAD-45363,Selfcare Consumer prepaid TC_Prepaid_Bundle_Purchase,1.28118603,Test@234,,,5123450000000010,Testing,139,123
+Y,QAD-45359,Selfcare Consumer TC_Verify_AddFriend,1.28089971,Test12345,971555679371,Mohan,5123450000000010,Testing,139,123
+Y,QAD-45370,Selfcare TC_Verify_PostpaidAddFriendPrepaid,1.28114454,test66,971555679371,Mohan,,,,
+Y,QAD-45364,Selfcare Enterprise TC_Verify_Validate Dashboard - Enterprise - L-40 PR having multiple Contracts,,,,,,,139,
+Y,QAD-45360,Selfcare Consumer TC_Verify_RemoveLinkedAccount,1.28089971,Test12345,,,,,139,
+Y,QAD-41101,Selfcare Consumer TC_Verify_RemoveFriend,1.28114454,test66,971559640529,,,,139,
+Y,QAD-45351,Selfcare Consumer TC_Verify_PostpaidPayForFriendPrepaid,1.28098833,test66,971555679371,Mohan,5123450000000010,Testing,139,123
+Y,QAD-45352,Selfcare Enterprise TC_Verify_DashboardEnterpriseL10,6.122913,test123,,,,,139,
+Y,QAD-45355,Selfcare Consumer TC_Verify_ChangePlan,1.2808961,Test12345,,,,,139,
+Y,QAD-45356,Selfcare Consumer TC_Verify_UpdateProfile,,Test12345,971555679371,Mohan,5123450000000010,Testing,139,123
+Y,QAD-45358,Selfcare Consumer TC_Verify_UpdateCreditard,1.2808961,Test12345,,,5123450000000010,Testing,139,123
+Y,QAD-46628,Selfcare TC_Verify_DashboardConsumerFixedLine,Srinivas.podugu@du.ae,Home@Dubai34,,,5123450000000010,Testing,139,123

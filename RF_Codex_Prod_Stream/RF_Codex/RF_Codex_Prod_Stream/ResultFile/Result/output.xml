@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 4.0 (Python 3.8.8 on linux)" generated="20220421 07:32:11.164" rpa="false" schemaversion="2">
+<suite id="s1" name="ESHOP Production Suite" source="/robot/RF_Codex/RF_Codex_Prod_Stream/APP/ESHOP/Test_Case/ESHOP_Production_Suite.robot">
+<kw name="ESHOP_MoveFileToArchive" library="Setup_TearDown" type="SETUP">
+<kw name="Set Variable" library="BuiltIn">
+<var>${sourcefile}</var>
+<arg>/robot/RF_Codex/RF_Codex_Prod_Stream/APP/CommonResources/../../ResultFile/Result/*.zip</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20220421 07:32:12.927" level="INFO">${sourcefile} = /robot/RF_Codex/RF_Codex_Prod_Stream/APP/CommonResources/../../ResultFile/Result/*.zip</msg>
+<status status="PASS" starttime="20220421 07:32:12.927" endtime="20220421 07:32:12.928"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${destinationpath}</var>
+<arg>/robot/RF_Codex/RF_Codex_Prod_Stream/APP/CommonResources/../../Archive</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20220421 07:32:12.928" level="INFO">${destinationpath} = /robot/RF_Codex/RF_Codex_Prod_Stream/APP/CommonResources/../../Archive</msg>
+<status status="PASS" starttime="20220421 07:32:12.928" endtime="20220421 07:32:12.929"/>
+</kw>
+<kw name="Count Files In Directory" library="OperatingSystem">
+<var>${countFiles}</var>
+<arg>/robot/RF_Codex/RF_Codex_Prod_Stream/APP/CommonResources/../../ResultFile/Result</arg>
+<doc>Wrapper for `Count Items In Directory` returning only file count.</doc>
+<msg timestamp="20220421 07:32:12.930" level="INFO" html="true">Listing contents of directory '&lt;a href="file:///robot/RF_Codex/RF_Codex_Prod_Stream/ResultFile/Result"&gt;/robot/RF_Codex/RF_Codex_Prod_Stream/ResultFile/Result&lt;/a&gt;'.</msg>
+<msg timestamp="20220421 07:32:12.930" level="FAIL">Directory '/robot/RF_Codex/RF_Codex_Prod_Stream/ResultFile/Result' does not exist.</msg>
+<status status="FAIL" starttime="20220421 07:32:12.929" endtime="20220421 07:32:12.931"/>
+</kw>
+<kw name="Run Keyword If" library="BuiltIn">
+<arg>'${countFiles}'&gt;='1'</arg>
+<arg>OperatingSystem.Move Files</arg>
+<arg>${sourcefile}</arg>
+<arg>${destinationpath}</arg>
+<doc>Runs the given keyword with the given arguments, if ``condition`` is true.</doc>
+<status status="NOT RUN" starttime="20220421 07:32:12.931" endtime="20220421 07:32:12.931"/>
+</kw>
+<kw name="ESHOP_ExecutorExcel_Setup" library="Setup_TearDown">
+<status status="NOT RUN" starttime="20220421 07:32:12.931" endtime="20220421 07:32:12.931"/>
+</kw>
+<status status="FAIL" starttime="20220421 07:32:12.926" endtime="20220421 07:32:12.932"/>
+</kw>
+<test id="s1-t1" name="ESHOP Latest ZTE AXON 10 PRO 5G">
+<tag>QAD-11111</tag>
+<status status="FAIL" starttime="20220421 07:32:12.932" endtime="20220421 07:32:12.933">Parent suite setup failed:
+Directory '/robot/RF_Codex/RF_Codex_Prod_Stream/ResultFile/Result' does not exist.</status>
+</test>
+<status status="FAIL" starttime="20220421 07:32:11.168" endtime="20220421 07:32:12.935">Suite setup failed:
+Directory '/robot/RF_Codex/RF_Codex_Prod_Stream/ResultFile/Result' does not exist.</status>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="0" fail="1" skip="0">QAD-11111</stat>
+</tag>
+<suite>
+<stat pass="0" fail="1" skip="0" id="s1" name="ESHOP Production Suite">ESHOP Production Suite</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

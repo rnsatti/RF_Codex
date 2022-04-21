@@ -32,4 +32,6 @@ sh /ngt-codex-qa/ngt-codex-qa/bin/prometrics.sh
 
 
 
-#docker run -v "C:\du\Projects\QMS\TAM\2022\Codex\RF_Codex":"/results" -e PUSH_GATE=http://192.168.0.16:9091 -e CASES=Suite -e EXE_RESULTS="--outputdir /results/ResultFile/Result" -e SELECTED="--include QAD-11111" -e ENV=Production -e METRIC_COMPL=ESHOP -e JOB_NAME=ESHOP_Production --name rf_test rf_codex:2.0
+#docker run -v "C:\du\Projects\QMS\TAM\2022\Codex\RF_Codex":"/results" -e PUSH_GATE=http://192.168.0.16:9091 -e CASES=Suite -e EXE_RESULTS="--outputdir /results/RF_Codex/RF_Codex_Prod_Stream/ResultFile/Result" -e SELECTED="--include QAD-11111" -e ENV=Production -e METRIC_COMPL=ESHOP -e JOB_NAME=ESHOP_Production --name rf_test rf_codex:2.0
+
+#docker run -v "C:\nomi\GitHubLocalRepo\RF_Codex\RF_Codex_Prod_Stream":"/results" -e PUSH_GATE=http://192.168.0.16:9091 -e CASES=Suite -e EXE_RESULTS="--outputdir /results/RF_Codex/RF_Codex_Prod_Stream/ResultFile/Result" -e SELECTED="--include QAD-11111" -e ENV=Production -e METRIC_COMPL=ESHOP -e JOB_NAME=ESHOP_Production --name rf_test rf_codex:2.0

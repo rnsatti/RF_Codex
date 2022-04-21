@@ -1,5 +1,5 @@
 *** Settings ***
-Suite Setup       ESHOP_MoveFileToArchive
+Suite Setup
 Library           OperatingSystem    #Suite Teardown    XrayResultsUpload    #Test Teardown    TestStatusUpdateJson    #Suite Setup    ESHOP_MoveFileToArchive    #Suite Teardown    XrayResultsUpload    #Test Teardown    TestStatusUpdateJson
 Library           RPA.Browser.Selenium
 Library           ScreenCapLibrary

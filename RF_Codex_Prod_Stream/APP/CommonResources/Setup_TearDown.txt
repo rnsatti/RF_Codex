@@ -522,14 +522,14 @@ SFA_ExecutorUpdateEnvfromJira
     Save JSON to file    ${executorfile}    ${executorpath}
 
 ESHOP_MoveFileToArchive
-    ${sourcefile}    Set Variable    ${CURDIR}/../../ResultFile/Result/*.zip
-    ${destinationpath}    Set Variable    ${CURDIR}/../../Archive
-    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../../ResultFile/Result
+    ${sourcefile}    Set Variable    ${CURDIR}/../ResultFile/Result/*.zip
+    ${destinationpath}    Set Variable    ${CURDIR}/../Archive
+    ${countFiles}    OperatingSystem.Count Files In Directory    ${CURDIR}/../ResultFile/Result
     Run Keyword If    '${countFiles}'>='1'    OperatingSystem.Move Files    ${sourcefile}    ${destinationpath}
     #    UpdateXrayFiletoDefault
     #    ESHOP_JiraConfigValue
     #    ESHOP_ExecutorUpdateTestsFromJira
-    ESHOP_ExecutorExcel_Setup
+    Comment    ESHOP_ExecutorExcel_Setup
 
 ESHOP_JiraConfigValue
     ${configurator}    OperatingSystem.Get File    ${CURDIR}/../ESHOP/Config/ESHOP_Config_file.txt
@@ -656,7 +656,7 @@ Selfcare_MoveFileToArchive
     UpdateXrayFiletoDefault
     #Selfcare_JiraConfigValue
     #Selfcare_ExecutorUpdateTestsFromJira
-        Selfcare_ExecutorExcel_Setup
+    Selfcare_ExecutorExcel_Setup
 
 Selfcare_JiraConfigValue
     ${configurator}    OperatingSystem.Get File    ${CURDIR}/../Selfcare/Config/Selfcare_Config_file.txt

@@ -14,6 +14,7 @@ Resource          ../Locators/Eshop_Locators.txt
 *** Test Cases ***
 ESHOP Latest ZTE AXON 10 PRO 5G
     [Tags]    QAD-11111
+    [Setup]    Move_File_Archieve
     ${executionname}    Set Variable    @{TEST_TAGS}
     Log    ${executionname}
     @{dict}=    read csv file to associative    ${ESHOP_EXCEL_FILE}

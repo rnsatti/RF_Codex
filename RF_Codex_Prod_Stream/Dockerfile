@@ -47,11 +47,26 @@ COPY baselibraries.txt /robot/baselibraries.txt
 #RUN pip install robotframework-pabot
 RUN pip install -r baselibraries.txt
 
-COPY . .
+COPY ./bin/ /robot/bin/
 
-WORKDIR /robot/APP
+RUN git clone https://f6eabdef287da7e05f92b170f768f5c1b0188f77@github.com/rnsatti/RF_Codex.git
+
+#RUN git clone https://f6eabdef287da7e05f92b170f768f5c1b0188f77@github.com/rnsatti/RF_Codex/RF_Codex_Prod_Stream.git
+
+#/robot/RF_Codex_Prod_Stream/app
+RUN echo **** git clone successfull ****
+
+# COPY . .
+
+
+
+#WORKDIR /robot/APP
+
+RUN echo **** working directory created ****
 
 #Robot Specific
 #ENTRYPOINT ["robot"]
+
+#CMD ["sh", "-c", "/robot/RF_Codex/RF_Codex_Prod_Stream/bin/entrypoint.sh"]
 
 CMD ["sh", "-c", "/robot/bin/entrypoint.sh"]

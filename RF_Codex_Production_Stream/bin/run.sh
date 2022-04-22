@@ -3,11 +3,11 @@ echo $(date)
 echo $CASES   #QAD-11111 ESHOP/Test_Case/ESHOP_Production_Suite.robot   : Which suite we have to execute (Regression or sanity) 
 echo $ENV     # Production, Preview, Regression
 echo $METRIC_COMPL # Application name (ESHOP, Selfcare)
-echo b4 robot command run ******************************************************************************************code downloaded ****************************************************************************
+#echo b4 robot command run ******************************************************************************************code downloaded ****************************************************************************
 
 cd /robot/RF_Codex && git pull
 
-echo ******************************************************************************************code downloaded ****************************************************************************
+#echo ******************************************************************************************code downloaded ****************************************************************************
 #echo ******************************************************************************************code downloaded ****************************************************************************
 #echo ******************************************************************************************code downloaded ****************************************************************************
 #echo ******************************************************************************************code downloaded ****************************************************************************
@@ -16,9 +16,10 @@ echo ***************************************************************************
 #cd /ngt-codex-qa/ngt-codex-qa && mvn package -DskipTests 
 #cd /ngt-codex-qa/ngt-codex-qa && mvn gauge:execute -DspecsDir=specs/$CASES -Denv=$ENV
 
-echo the command is $EXE_RESULTS $SELECTED $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
+echo the path is /robot/RF_Codex/RF_Codex_$ENV'_'Stream/APP/ESHOP/Test_Case
+echo the command is robot $EXE_RESULTS $SELECTED $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
 
-cd /robot/RF_Codex/RF_Codex_Production_Stream/APP/ESHOP/Test_Case && robot $EXE_RESULTS $SELECTED $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
+cd /robot/RF_Codex/RF_Codex_$ENV'_'Stream/APP/ESHOP/Test_Case && robot $EXE_RESULTS $SELECTED $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
 
 #/ESHOP/Test_Case/ESHOP_Production_Suite.robot
 

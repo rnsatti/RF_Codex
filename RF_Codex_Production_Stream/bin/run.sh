@@ -16,9 +16,9 @@ echo ***************************************************************************
 #cd /ngt-codex-qa/ngt-codex-qa && mvn package -DskipTests 
 #cd /ngt-codex-qa/ngt-codex-qa && mvn gauge:execute -DspecsDir=specs/$CASES -Denv=$ENV
 
-echo the command is $EXE_RESULTS $SELECTED $METRIC_COMPL'_'$ENV'_'$CASES.robot
+echo the command is $EXE_RESULTS $SELECTED $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
 
-cd /robot/RF_Codex/RF_Codex_Production_Stream/APP/ESHOP/Test_Case && robot $EXE_RESULTS $SELECTED $METRIC_COMPL'_'$ENV'_'$CASES.robot
+cd /robot/RF_Codex/RF_Codex_Production_Stream/APP/ESHOP/Test_Case && robot $EXE_RESULTS $SELECTED $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
 
 #/ESHOP/Test_Case/ESHOP_Production_Suite.robot
 
@@ -36,4 +36,4 @@ sh /ngt-codex-qa/ngt-codex-qa/bin/prometrics.sh
 
 #docker run -v "C:\du\Projects\QMS\TAM\2022\Codex\RF_Codex":"/results" -e PUSH_GATE=http://192.168.0.16:9091 -e CASES=Suite -e EXE_RESULTS="--outputdir /results/RF_Codex/RF_Codex_Prod_Stream/ResultFile/Result" -e SELECTED="--include QAD-11111" -e ENV=Production -e METRIC_COMPL=ESHOP -e JOB_NAME=ESHOP_Production --name rf_test rf_codex:2.0
 
-#docker run -v "C:\nomi\GitHubLocalRepo":"/results" -e PUSH_GATE=http://192.168.0.16:9091 -e CASES=Suite -e EXE_RESULTS="--outputdir /results/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result" -e SELECTED="--include QAD-11111" -e ENV=Production -e METRIC_COMPL=ESHOP -e JOB_NAME=ESHOP_Production --name rf_test rf_codex:2.0
+#docker run -v "C:\nomi\GitHubLocalRepo":"/results" -e PUSH_GATE=http://192.168.0.16:9091 -e CASES=Regression -e EXE_RESULTS="--outputdir /results/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result" -e SELECTED="--include QAD-11111" -e ENV=Production -e METRIC_COMPL=ESHOP -e JOB_NAME=ESHOP_Production --name rf_test rf_codex:2.0

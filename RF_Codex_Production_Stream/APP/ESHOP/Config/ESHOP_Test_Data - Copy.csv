@@ -1,0 +1,13 @@
+ID,JiraID,TestcaseID,URL,ProductName,RatePlan,Email,Phone,EmiratesId,First_Name,Birth_Date,Expiry_Date,Full_Address
+1,QAD-11111,ESHOP Latest ZTE AXON 10 PRO 5G,https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002,AXON 10 PRO 5G,,,,,,,,
+2,QAD-22222,ESHOP Latest Samsung Galaxy S21 Ultra 5G,https://shop.du.ae/en/personal/Mobile-phones/galaxy-s21-ultra-5g-p-COM-HS-SAM-528,Galaxy S21 Ultra 5G,,,,,,,,
+3,QAD-33333,ESHOP Latest Huawei Mate 20X 5G,https://shop.du.ae/en/personal/Mobile-phones/mate-20x-5g-p-COM-HS-HUW-BB-006,Mate 20X 5G,,,,,,,,
+4,QAD-44444,ESHOP Best Seller Apple iPhone 12 Pro,https://shop.du.ae/en/personal/Mobile-phones/iphone-12-pro-p-COM-HS-APP-529,iPhone 12 Pro,,,,,,,,
+5,QAD-55555,ESHOP Best Seller Apple iPhone 13 Pro Max,https://shop.du.ae/en/personal/Mobile-phones/iphone-13-pro-max-p-COM-HS-APP-591,iPhone 13 Pro Max,,,,,,,,
+6,QAD-66666,ESHOP Best Seller Samsung Galaxy A52s,https://shop.du.ae/en/personal/Mobile-phones/galaxy-a52s-p-COM-HS-SAM-596,Galaxy A52s,,,,,,,,
+7,QAD-77777,ESHOP Best Seller AirPods Pro,https://shop.du.ae/en/personal/Accessories/airpods-pro-with-magsafe-case-p-COM-ACC-APP-643,AirPods Pro with MagSafe case,,,,,,,,
+8,QAD-88888,ESHOP Best Seller Watch Series 7 GPS,https://shop.du.ae/en/personal/Watches/watch-series-7-gps-p-COM-APP-WATCH-066,Watch Series 7 GPS,,,,,,,,
+9,QAD-13333,ESHOP Latest Samsung Galaxy Note20 Ultra 5G,https://shop.du.ae/en/personal/5G-Devices/galaxy-note20-ultra-5g-p-COM-HS-SAM-501?findInStock=true,Galaxy Note20 Ultra 5G,,,,,,,,
+10,QAD-99999,ESHOP Load Personal Postpaid Power Plan,https://shop.du.ae,,,test@du.ae,9.71E+11,784-1234-5678912-4,Ali Ahammed Khan,11/11/1988,11/11/2025,"villa/apartment number street, area"
+11,QAD-12222,ESHOP Go Personal Prepaid Plan,https://shop.du.ae/en/personal/s-du-prepaid-flexi-plans,,Prepaid Flexi,,,,,,,
+12,QAD-14444,ESHOP Acquire Postpaid Plan With Preferred Contract,https://shop.du.ae,,,test@du.ae,9.71E+11,784-1234-5678912-4,Ali Ahammed Khan,11/11/1988,11/11/2025,"villa/apartment number street, area"

@@ -11,6 +11,24 @@ Take_Screenshot
     ${dateTimeStampScreenshot}    Get Current Date    result_format=%d-%m-%Y-%H-%M-%S
     Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-${TEST NAME}-${dateTimeStampScreenshot}.png
 
+ESHOP_VariableSetup_Testcase
+    ${testtagname}    Set Variable    @{TEST_TAGS}
+    Log    ${testtagname}
+    Set Test Variable    ${testtagname}
+    ${testcasename}    Set Variable    ${TEST NAME}
+    Set Test Variable    ${testcasename}
+    Log    ${testtagname}
+    ${query}    Query    select JiraID,TestcaseID,URL,ProductName,RatePlan,Email,Phone,EmiratesId,First_Name,Birth_Date,Expiry_Date,Full_Address from ESHOP_Production_Regression_Suite_Table where JiraID='${testtagname}'
+    Log    ${query[0][0]}
+    ${testcaseid}    Set Variable    ${query[0][1]}
+    Set Test Variable    ${testcaseid}
+    ${Eshop_URL}    Set Variable    ${query[0][2]}
+    Set Test Variable    ${Eshop_URL}
+    ${Product_Name}    Set Variable    ${query[0][3]}
+    Set Test Variable    ${Product_Name}
+    ${Rate_Plan}    Set Variable    ${query[0][4]}
+    Set Test Variable    ${Rate_Plan}
+
 ESHOP_VariableValueRetreive
     ${Eshop_URL}    Set Variable    ${testData['URL']}
     Set Global Variable    ${Eshop_URL}

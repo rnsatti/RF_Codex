@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 4.0 (Python 3.8.8 on win32)" generated="20220530 11:39:47.532" rpa="false" schemaversion="2">
+<suite id="s1" name="RF Codex" source="C:\nomi\GitHubLocalRepo\RF_Codex">
+<suite id="s1-s1" name="RF Codex Production Stream" source="C:\nomi\GitHubLocalRepo\RF_Codex\RF_Codex_Production_Stream">
+<suite id="s1-s1-s1" name="APP" source="C:\nomi\GitHubLocalRepo\RF_Codex\RF_Codex_Production_Stream\APP">
+<suite id="s1-s1-s1-s1" name="ESHOP" source="C:\nomi\GitHubLocalRepo\RF_Codex\RF_Codex_Production_Stream\APP\ESHOP">
+<suite id="s1-s1-s1-s1-s1" name="Test Case" source="C:\nomi\GitHubLocalRepo\RF_Codex\RF_Codex_Production_Stream\APP\ESHOP\Test_Case">
+<suite id="s1-s1-s1-s1-s1-s1" name="ESHOP Production Regression Suite" source="C:\nomi\GitHubLocalRepo\RF_Codex\RF_Codex_Production_Stream\APP\ESHOP\Test_Case\ESHOP_Production_Regression_Suite.robot">
+<kw name="Open_DatabaseConnection" library="Setup_TearDown" type="SETUP">
+<kw name="Comment" library="BuiltIn">
+<arg>key word to connect to DB and open the connection at suite level</arg>
+<doc>Displays the given messages in the log file as keyword arguments.</doc>
+<status status="PASS" starttime="20220530 11:39:49.610" endtime="20220530 11:39:49.610"/>
+</kw>
+<kw name="Connect To Database" library="DatabaseLibrary">
+<arg>${DB_TYPE}</arg>
+<arg>${DB_NAME}</arg>
+<arg>${DB_USERNAME}</arg>
+<arg>${DB_PASSWORD}</arg>
+<arg>${DB_URL}</arg>
+<arg>${PORT}</arg>
+<doc>Loads the DB API 2.0 module given `dbapiModuleName` then uses it to
+connect to the database using `dbName`, `dbUsername`, and `dbPassword`.</doc>
+<msg timestamp="20220530 11:39:49.630" level="INFO">Connecting using : psycopg2.connect(database=RF_Codex, user=postgres, password=htc2020, host=localhost, port=5432) </msg>
+<status status="PASS" starttime="20220530 11:39:49.610" endtime="20220530 11:39:49.643"/>
+</kw>
+<status status="PASS" starttime="20220530 11:39:49.610" endtime="20220530 11:39:49.643"/>
+</kw>
+<test id="s1-s1-s1-s1-s1-s1-t1" name="ESHOP Latest ZTE AXON 10 PRO 5G">
+<kw name="ESHOP_VariableSetup_Testcase" library="ESHOP_Keyword" type="SETUP">
+<kw name="Set Variable" library="BuiltIn">
+<var>${testtagname}</var>
+<arg>@{TEST_TAGS}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20220530 11:39:49.650" level="INFO">${testtagname} = QAD-11111</msg>
+<status status="PASS" starttime="20220530 11:39:49.643" endtime="20220530 11:39:49.650"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${testtagname}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20220530 11:39:49.650" level="INFO">QAD-11111</msg>
+<status status="PASS" starttime="20220530 11:39:49.650" endtime="20220530 11:39:49.650"/>
+</kw>
+<kw name="Set Test Variable" library="BuiltIn">
+<arg>${testtagname}</arg>
+<doc>Makes a variable available everywhere within the scope of the current test.</doc>
+<msg timestamp="20220530 11:39:49.653" level="INFO">${testtagname} = QAD-11111</msg>
+<status status="PASS" starttime="20220530 11:39:49.650" endtime="20220530 11:39:49.654"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${testcasename}</var>
+<arg>${TEST NAME}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20220530 11:39:49.655" level="INFO">${testcasename} = ESHOP Latest ZTE AXON 10 PRO 5G</msg>
+<status status="PASS" starttime="20220530 11:39:49.654" endtime="20220530 11:39:49.655"/>
+</kw>
+<kw name="Set Test Variable" library="BuiltIn">
+<arg>${testcasename}</arg>
+<doc>Makes a variable available everywhere within the scope of the current test.</doc>
+<msg timestamp="20220530 11:39:49.657" level="INFO">${testcasename} = ESHOP Latest ZTE AXON 10 PRO 5G</msg>
+<status status="PASS" starttime="20220530 11:39:49.656" endtime="20220530 11:39:49.657"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${testtagname}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20220530 11:39:49.658" level="INFO">QAD-11111</msg>
+<status status="PASS" starttime="20220530 11:39:49.657" endtime="20220530 11:39:49.658"/>
+</kw>
+<kw name="Query" library="DatabaseLibrary">
+<var>${query}</var>
+<arg>select JiraID,TestcaseID,URL,ProductName,RatePlan,Email,Phone,EmiratesId,First_Name,Birth_Date,Expiry_Date,Full_Address from ESHOP_Production_Regression_Suite_Table where JiraID='${testtagname}'</arg>
+<doc>Uses the input `selectStatement` to query for the values that will be returned as a list of tuples. Set optional
+input `sansTran` to True to run command without an explicit transaction commit or rollback.
+Set optional input `returnAsDict` to True to return values as a list of dictionaries.</doc>
+<msg timestamp="20220530 11:39:49.659" level="INFO">Executing : Query  |  select JiraID,TestcaseID,URL,ProductName,RatePlan,Email,Phone,EmiratesId,First_Name,Birth_Date,Expiry_Date,Full_Address from ESHOP_Production_Regression_Suite_Table where JiraID='QAD-11111' </msg>
+<msg timestamp="20220530 11:39:49.666" level="INFO">${query} = [('QAD-11111', 'ESHOP Latest ZTE AXON 10 PRO 5G', 'https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002', 'AXON 10 PRO 5G', None, None, None, None, None, None, None, None)]</msg>
+<status status="PASS" starttime="20220530 11:39:49.659" endtime="20220530 11:39:49.666"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${query[0][0]}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20220530 11:39:49.670" level="INFO">QAD-11111</msg>
+<status status="PASS" starttime="20220530 11:39:49.667" endtime="20220530 11:39:49.671"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${testcaseid}</var>
+<arg>${query[0][1]}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20220530 11:39:49.675" level="INFO">${testcaseid} = ESHOP Latest ZTE AXON 10 PRO 5G</msg>
+<status status="PASS" starttime="20220530 11:39:49.672" endtime="20220530 11:39:49.675"/>
+</kw>
+<kw name="Set Test Variable" library="BuiltIn">
+<arg>${testcaseid}</arg>
+<doc>Makes a variable available everywhere within the scope of the current test.</doc>
+<msg timestamp="20220530 11:39:49.677" level="INFO">${testcaseid} = ESHOP Latest ZTE AXON 10 PRO 5G</msg>
+<status status="PASS" starttime="20220530 11:39:49.676" endtime="20220530 11:39:49.677"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${Eshop_URL}</var>
+<arg>${query[0][2]}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20220530 11:39:49.679" level="INFO">${Eshop_URL} = https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002</msg>
+<status status="PASS" starttime="20220530 11:39:49.677" endtime="20220530 11:39:49.679"/>
+</kw>
+<kw name="Set Test Variable" library="BuiltIn">
+<arg>${Eshop_URL}</arg>
+<doc>Makes a variable available everywhere within the scope of the current test.</doc>
+<msg timestamp="20220530 11:39:49.680" level="INFO">${Eshop_URL} = https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002</msg>
+<status status="PASS" starttime="20220530 11:39:49.680" endtime="20220530 11:39:49.681"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${Product_Name}</var>
+<arg>${query[0][3]}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20220530 11:39:49.683" level="INFO">${Product_Name} = AXON 10 PRO 5G</msg>
+<status status="PASS" starttime="20220530 11:39:49.681" endtime="20220530 11:39:49.683"/>
+</kw>
+<kw name="Set Test Variable" library="BuiltIn">
+<arg>${Product_Name}</arg>
+<doc>Makes a variable available everywhere within the scope of the current test.</doc>
+<msg timestamp="20220530 11:39:49.685" level="INFO">${Product_Name} = AXON 10 PRO 5G</msg>
+<status status="PASS" starttime="20220530 11:39:49.684" endtime="20220530 11:39:49.685"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${Rate_Plan}</var>
+<arg>${query[0][4]}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<msg timestamp="20220530 11:39:49.690" level="INFO">${Rate_Plan} = None</msg>
+<status status="PASS" starttime="20220530 11:39:49.686" endtime="20220530 11:39:49.690"/>
+</kw>
+<kw name="Set Test Variable" library="BuiltIn">
+<arg>${Rate_Plan}</arg>
+<doc>Makes a variable available everywhere within the scope of the current test.</doc>
+<msg timestamp="20220530 11:39:49.690" level="INFO">${Rate_Plan} = None</msg>
+<status status="PASS" starttime="20220530 11:39:49.690" endtime="20220530 11:39:49.690"/>
+</kw>
+<status status="PASS" starttime="20220530 11:39:49.643" endtime="20220530 11:39:49.690"/>
+</kw>
+<kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
+<arg>${Eshop_URL}</arg>
+<kw name="Comment" library="BuiltIn">
+<arg>Open Chrome Browser</arg>
+<arg>${url}</arg>
+<arg>options=add_extension("./lhobafahddgcelffkeicbaginigeejlf.crx")</arg>
+<doc>Displays the given messages in the log file as keyword arguments.</doc>
+<status status="PASS" starttime="20220530 11:39:49.690" endtime="20220530 11:39:49.696"/>
+</kw>
+<kw name="Open Browser" library="RPA.Browser.Selenium">
+<arg>${url}</arg>
+<arg>chrome</arg>
+<arg>options=add_argument("headless"); add_argument("--disable-infobars"); add_argument("--disable-dev-shm-usage"); add_argument("--no-sandbox"); add_argument("--remote-debugging-port=9222");add_argument('--ignore-ssl-errors=yes');add_argument('--ignore-certificate-errors')</arg>
+<doc>Opens a new browser instance to the optional ``url``.</doc>
+<msg timestamp="20220530 11:39:49.697" level="INFO">Opening browser 'chrome' to base url 'https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002'.</msg>
+<status status="PASS" starttime="20220530 11:39:49.696" endtime="20220530 11:40:03.224"/>
+</kw>
+<kw name="Maximize Browser Window" library="RPA.Browser.Selenium">
+<doc>Maximizes current browser window.</doc>
+<status status="PASS" starttime="20220530 11:40:03.225" endtime="20220530 11:40:03.344"/>
+</kw>
+<kw name="Delete All Cookies" library="RPA.Browser.Selenium">
+<doc>Deletes all cookies.</doc>
+<status status="PASS" starttime="20220530 11:40:03.345" endtime="20220530 11:40:03.587"/>
+</kw>
+<kw name="Delete All Sessions" library="RequestsLibrary">
+<doc>Removes all the session objects</doc>
+<msg timestamp="20220530 11:40:03.588" level="INFO">Delete All Sessions</msg>
+<status status="PASS" starttime="20220530 11:40:03.588" endtime="20220530 11:40:03.589"/>
+</kw>
+<kw name="Capture Page Screenshot" library="RPA.Browser.Selenium">
+<arg>${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Home_Screen.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<msg timestamp="20220530 11:40:03.723" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="../../RF_Codex_Production_Stream/ResultFile/Result/%5B%27RF%20Codex%27%2C%20%27RF%20Codex%20Production%20Stream%27%2C%20%27APP%27%2C%20%27ESHOP%27%2C%20%27Test%20Case%27%2C%20%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-Home_Screen.png"&gt;&lt;img src="../../RF_Codex_Production_Stream/ResultFile/Result/%5B%27RF%20Codex%27%2C%20%27RF%20Codex%20Production%20Stream%27%2C%20%27APP%27%2C%20%27ESHOP%27%2C%20%27Test%20Case%27%2C%20%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-Home_Screen.png" width="800px"&gt;&lt;/a&gt;</msg>
+<status status="PASS" starttime="20220530 11:40:03.589" endtime="20220530 11:40:03.723"/>
+</kw>
+<status status="PASS" starttime="20220530 11:39:49.690" endtime="20220530 11:40:03.724"/>
+</kw>
+<kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
+<arg>${Product_Name}</arg>
+<kw name="Run Keyword And Return Status" library="BuiltIn">
+<var>${product_status}</var>
+<arg>Wait Until Page Contains</arg>
+<arg>${product_name}</arg>
+<arg>30s</arg>
+<doc>Runs the given keyword with given arguments and returns the status as a Boolean value.</doc>
+<kw name="Wait Until Page Contains" library="RPA.Browser.Selenium">
+<arg>${product_name}</arg>
+<arg>30s</arg>
+<doc>Waits until ``text`` appears on the current page.</doc>
+<status status="PASS" starttime="20220530 11:40:03.726" endtime="20220530 11:40:03.782"/>
+</kw>
+<msg timestamp="20220530 11:40:03.783" level="INFO">${product_status} = True</msg>
+<status status="PASS" starttime="20220530 11:40:03.725" endtime="20220530 11:40:03.783"/>
+</kw>
+<if>
+<branch type="IF" condition="${product_status}">
+<kw name="Capture Page Screenshot" library="RPA.Browser.Selenium">
+<arg>${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-${product_name}.png</arg>
+<doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
+<msg timestamp="20220530 11:40:03.906" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="../../RF_Codex_Production_Stream/ResultFile/Result/%5B%27RF%20Codex%27%2C%20%27RF%20Codex%20Production%20Stream%27%2C%20%27APP%27%2C%20%27ESHOP%27%2C%20%27Test%20Case%27%2C%20%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-AXON%2010%20PRO%205G.png"&gt;&lt;img src="../../RF_Codex_Production_Stream/ResultFile/Result/%5B%27RF%20Codex%27%2C%20%27RF%20Codex%20Production%20Stream%27%2C%20%27APP%27%2C%20%27ESHOP%27%2C%20%27Test%20Case%27%2C%20%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-AXON%2010%20PRO%205G.png" width="800px"&gt;&lt;/a&gt;</msg>
+<status status="PASS" starttime="20220530 11:40:03.785" endtime="20220530 11:40:03.906"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${product_name} found.</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20220530 11:40:03.907" level="INFO">AXON 10 PRO 5G found.</msg>
+<status status="PASS" starttime="20220530 11:40:03.907" endtime="20220530 11:40:03.908"/>
+</kw>
+<status status="PASS" starttime="20220530 11:40:03.784" endtime="20220530 11:40:03.908"/>
+</branch>
+<branch type="ELSE">
+<kw name="Log" library="BuiltIn">
+<arg>${product_name} not found.</arg>
+<doc>Logs the given message with the given level.</doc>
+<status status="NOT RUN" starttime="20220530 11:40:03.909" endtime="20220530 11:40:03.909"/>
+</kw>
+<kw name="Fail" library="BuiltIn">
+<doc>Fails the test with the given message and optionally alters its tags.</doc>
+<status status="NOT RUN" starttime="20220530 11:40:03.909" endtime="20220530 11:40:03.910"/>
+</kw>
+<status status="NOT RUN" starttime="20220530 11:40:03.908" endtime="20220530 11:40:03.910"/>
+</branch>
+<status status="PASS" starttime="20220530 11:40:03.784" endtime="20220530 11:40:03.910"/>
+</if>
+<status status="PASS" starttime="20220530 11:40:03.724" endtime="20220530 11:40:03.910"/>
+</kw>
+<kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
+<kw name="Close All Browsers" library="RPA.Browser.Selenium">
+<doc>Closes all open browsers and resets the browser cache.</doc>
+<status status="PASS" starttime="20220530 11:40:03.911" endtime="20220530 11:40:06.117"/>
+</kw>
+<status status="PASS" starttime="20220530 11:40:03.911" endtime="20220530 11:40:06.119"/>
+</kw>
+<tag>QAD-11111</tag>
+<status status="PASS" starttime="20220530 11:39:49.643" endtime="20220530 11:40:06.120"/>
+</test>
+<kw name="Close_DatabaseConnection" library="Setup_TearDown" type="TEARDOWN">
+<kw name="Comment" library="BuiltIn">
+<arg>key word to disconnect to DB and open the connection at suite level</arg>
+<doc>Displays the given messages in the log file as keyword arguments.</doc>
+<status status="PASS" starttime="20220530 11:40:06.122" endtime="20220530 11:40:06.123"/>
+</kw>
+<kw name="Disconnect From Database" library="DatabaseLibrary">
+<doc>Disconnects from the database.</doc>
+<msg timestamp="20220530 11:40:06.124" level="INFO">Executing : Disconnect From Database</msg>
+<status status="PASS" starttime="20220530 11:40:06.124" endtime="20220530 11:40:06.125"/>
+</kw>
+<status status="PASS" starttime="20220530 11:40:06.122" endtime="20220530 11:40:06.126"/>
+</kw>
+<status status="PASS" starttime="20220530 11:39:47.619" endtime="20220530 11:40:06.127"/>
+</suite>
+<status status="PASS" starttime="20220530 11:39:47.619" endtime="20220530 11:40:06.131"/>
+</suite>
+<status status="PASS" starttime="20220530 11:39:47.612" endtime="20220530 11:40:06.135"/>
+</suite>
+<status status="PASS" starttime="20220530 11:39:47.612" endtime="20220530 11:40:06.140"/>
+</suite>
+<status status="PASS" starttime="20220530 11:39:47.600" endtime="20220530 11:40:06.140"/>
+</suite>
+<status status="PASS" starttime="20220530 11:39:47.573" endtime="20220530 11:40:06.140"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="1" fail="0" skip="0">QAD-11111</stat>
+</tag>
+<suite>
+<stat pass="1" fail="0" skip="0" id="s1" name="RF Codex">RF Codex</stat>
+<stat pass="1" fail="0" skip="0" id="s1-s1" name="RF Codex Production Stream">RF Codex.RF Codex Production Stream</stat>
+<stat pass="1" fail="0" skip="0" id="s1-s1-s1" name="APP">RF Codex.RF Codex Production Stream.APP</stat>
+<stat pass="1" fail="0" skip="0" id="s1-s1-s1-s1" name="ESHOP">RF Codex.RF Codex Production Stream.APP.ESHOP</stat>
+<stat pass="1" fail="0" skip="0" id="s1-s1-s1-s1-s1" name="Test Case">RF Codex.RF Codex Production Stream.APP.ESHOP.Test Case</stat>
+<stat pass="1" fail="0" skip="0" id="s1-s1-s1-s1-s1-s1" name="ESHOP Production Regression Suite">RF Codex.RF Codex Production Stream.APP.ESHOP.Test Case.ESHOP Production Regression Suite</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

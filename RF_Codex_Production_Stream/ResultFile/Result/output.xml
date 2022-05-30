@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 4.0 (Python 3.8.8 on linux)" generated="20220422 06:08:48.611" rpa="false" schemaversion="2">
+<robot generator="Robot 4.0 (Python 3.8.8 on linux)" generated="20220422 06:43:38.958" rpa="false" schemaversion="2">
 <suite id="s1" name="ESHOP Production Regression Suite" source="/robot/RF_Codex/RF_Codex_Production_Stream/APP/ESHOP/Test_Case/ESHOP_Production_Regression_Suite.robot">
 <test id="s1-t1" name="ESHOP Latest ZTE AXON 10 PRO 5G">
 <kw name="Set Variable" library="BuiltIn">
 <var>${executionname}</var>
 <arg>@{TEST_TAGS}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.948" level="INFO">${executionname} = QAD-11111</msg>
-<status status="PASS" starttime="20220422 06:08:49.947" endtime="20220422 06:08:49.948"/>
+<msg timestamp="20220422 06:43:40.305" level="INFO">${executionname} = QAD-11111</msg>
+<status status="PASS" starttime="20220422 06:43:40.304" endtime="20220422 06:43:40.305"/>
 </kw>
 <kw name="Log" library="BuiltIn">
 <arg>${executionname}</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220422 06:08:49.948" level="INFO">QAD-11111</msg>
-<status status="PASS" starttime="20220422 06:08:49.948" endtime="20220422 06:08:49.948"/>
+<msg timestamp="20220422 06:43:40.305" level="INFO">QAD-11111</msg>
+<status status="PASS" starttime="20220422 06:43:40.305" endtime="20220422 06:43:40.305"/>
 </kw>
 <kw name="Read Csv File To Associative" library="CSVLibrary">
 <var>@{dict}</var>
 <arg>${ESHOP_EXCEL_FILE}</arg>
 <doc>Read CSV file and return its content as a Python list of dictionaries.</doc>
-<msg timestamp="20220422 06:08:49.950" level="INFO">@{dict} = [ {'Flag': 'Y', 'JiraID': 'QAD-11111', 'TestcaseID': 'ESHOP Latest ZTE AXON 10 PRO 5G', 'URL': 'https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002', 'ProductName': 'AXON 10 P...</msg>
-<status status="PASS" starttime="20220422 06:08:49.949" endtime="20220422 06:08:49.950"/>
+<msg timestamp="20220422 06:43:40.307" level="INFO">@{dict} = [ {'Flag': 'Y', 'JiraID': 'QAD-11111', 'TestcaseID': 'ESHOP Latest ZTE AXON 10 PRO 5G', 'URL': 'https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002', 'ProductName': 'AXON 10 P...</msg>
+<status status="PASS" starttime="20220422 06:43:40.306" endtime="20220422 06:43:40.307"/>
 </kw>
 <kw name="Get Length" library="BuiltIn">
 <var>${dictlen}</var>
 <arg>${dict}</arg>
 <doc>Returns and logs the length of the given item as an integer.</doc>
-<msg timestamp="20220422 06:08:49.951" level="INFO">Length is 12</msg>
-<msg timestamp="20220422 06:08:49.951" level="INFO">${dictlen} = 12</msg>
-<status status="PASS" starttime="20220422 06:08:49.950" endtime="20220422 06:08:49.951"/>
+<msg timestamp="20220422 06:43:40.308" level="INFO">Length is 12</msg>
+<msg timestamp="20220422 06:43:40.309" level="INFO">${dictlen} = 12</msg>
+<status status="PASS" starttime="20220422 06:43:40.308" endtime="20220422 06:43:40.309"/>
 </kw>
 <kw name="Set Variable" library="BuiltIn">
 <var>${i}</var>
 <arg>1</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.952" level="INFO">${i} = 1</msg>
-<status status="PASS" starttime="20220422 06:08:49.951" endtime="20220422 06:08:49.952"/>
+<msg timestamp="20220422 06:43:40.309" level="INFO">${i} = 1</msg>
+<status status="PASS" starttime="20220422 06:43:40.309" endtime="20220422 06:43:40.309"/>
 </kw>
 <for flavor="IN RANGE">
 <var>${i}</var>
@@ -48,152 +48,152 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.959" level="INFO">${testData} = {'Flag': 'Y', 'JiraID': 'QAD-11111', 'TestcaseID': 'ESHOP Latest ZTE AXON 10 PRO 5G', 'URL': 'https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002', 'ProductName': 'AXON 10 PRO...</msg>
-<status status="PASS" starttime="20220422 06:08:49.957" endtime="20220422 06:08:49.959"/>
+<msg timestamp="20220422 06:43:40.318" level="INFO">${testData} = {'Flag': 'Y', 'JiraID': 'QAD-11111', 'TestcaseID': 'ESHOP Latest ZTE AXON 10 PRO 5G', 'URL': 'https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002', 'ProductName': 'AXON 10 PRO...</msg>
+<status status="PASS" starttime="20220422 06:43:40.316" endtime="20220422 06:43:40.318"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<msg timestamp="20220422 06:08:49.961" level="INFO">${testData} = {'Flag': 'Y', 'JiraID': 'QAD-11111', 'TestcaseID': 'ESHOP Latest ZTE AXON 10 PRO 5G', 'URL': 'https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002', 'ProductName': 'AXON 10 PRO...</msg>
-<status status="PASS" starttime="20220422 06:08:49.960" endtime="20220422 06:08:49.961"/>
+<msg timestamp="20220422 06:43:40.319" level="INFO">${testData} = {'Flag': 'Y', 'JiraID': 'QAD-11111', 'TestcaseID': 'ESHOP Latest ZTE AXON 10 PRO 5G', 'URL': 'https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002', 'ProductName': 'AXON 10 PRO...</msg>
+<status status="PASS" starttime="20220422 06:43:40.319" endtime="20220422 06:43:40.320"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
 <kw name="Set Variable" library="BuiltIn">
 <var>${Eshop_URL}</var>
 <arg>${testData['URL']}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.964" level="INFO">${Eshop_URL} = https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002</msg>
-<status status="PASS" starttime="20220422 06:08:49.962" endtime="20220422 06:08:49.964"/>
+<msg timestamp="20220422 06:43:40.322" level="INFO">${Eshop_URL} = https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002</msg>
+<status status="PASS" starttime="20220422 06:43:40.320" endtime="20220422 06:43:40.322"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${Eshop_URL}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<msg timestamp="20220422 06:08:49.965" level="INFO">${Eshop_URL} = https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002</msg>
-<status status="PASS" starttime="20220422 06:08:49.964" endtime="20220422 06:08:49.965"/>
+<msg timestamp="20220422 06:43:40.323" level="INFO">${Eshop_URL} = https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002</msg>
+<status status="PASS" starttime="20220422 06:43:40.323" endtime="20220422 06:43:40.323"/>
 </kw>
 <kw name="Set Variable" library="BuiltIn">
 <var>${Product_Name}</var>
 <arg>${testData['ProductName']}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.967" level="INFO">${Product_Name} = AXON 10 PRO 5G</msg>
-<status status="PASS" starttime="20220422 06:08:49.965" endtime="20220422 06:08:49.967"/>
+<msg timestamp="20220422 06:43:40.325" level="INFO">${Product_Name} = AXON 10 PRO 5G</msg>
+<status status="PASS" starttime="20220422 06:43:40.323" endtime="20220422 06:43:40.325"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${Product_Name}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<msg timestamp="20220422 06:08:49.968" level="INFO">${Product_Name} = AXON 10 PRO 5G</msg>
-<status status="PASS" starttime="20220422 06:08:49.968" endtime="20220422 06:08:49.968"/>
+<msg timestamp="20220422 06:43:40.326" level="INFO">${Product_Name} = AXON 10 PRO 5G</msg>
+<status status="PASS" starttime="20220422 06:43:40.326" endtime="20220422 06:43:40.326"/>
 </kw>
 <kw name="Set Variable" library="BuiltIn">
 <var>${Rate_Plan}</var>
 <arg>${testData['RatePlan']}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.970" level="INFO">${Rate_Plan} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.968" endtime="20220422 06:08:49.970"/>
+<msg timestamp="20220422 06:43:40.328" level="INFO">${Rate_Plan} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.327" endtime="20220422 06:43:40.328"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${Rate_Plan}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<msg timestamp="20220422 06:08:49.971" level="INFO">${Rate_Plan} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.971" endtime="20220422 06:08:49.971"/>
+<msg timestamp="20220422 06:43:40.329" level="INFO">${Rate_Plan} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.329" endtime="20220422 06:43:40.329"/>
 </kw>
 <kw name="Set Variable" library="BuiltIn">
 <var>${Email}</var>
 <arg>${testData['Email']}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.973" level="INFO">${Email} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.971" endtime="20220422 06:08:49.973"/>
+<msg timestamp="20220422 06:43:40.334" level="INFO">${Email} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.330" endtime="20220422 06:43:40.334"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${Email}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<msg timestamp="20220422 06:08:49.974" level="INFO">${Email} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.974" endtime="20220422 06:08:49.974"/>
+<msg timestamp="20220422 06:43:40.335" level="INFO">${Email} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.334" endtime="20220422 06:43:40.335"/>
 </kw>
 <kw name="Set Variable" library="BuiltIn">
 <var>${Phone}</var>
 <arg>${testData['Phone']}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.978" level="INFO">${Phone} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.974" endtime="20220422 06:08:49.979"/>
+<msg timestamp="20220422 06:43:40.338" level="INFO">${Phone} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.335" endtime="20220422 06:43:40.338"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${Phone}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<msg timestamp="20220422 06:08:49.980" level="INFO">${Phone} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.979" endtime="20220422 06:08:49.980"/>
+<msg timestamp="20220422 06:43:40.338" level="INFO">${Phone} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.338" endtime="20220422 06:43:40.338"/>
 </kw>
 <kw name="Set Variable" library="BuiltIn">
 <var>${EmiratesId}</var>
 <arg>${testData['EmiratesId']}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.982" level="INFO">${EmiratesId} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.980" endtime="20220422 06:08:49.982"/>
+<msg timestamp="20220422 06:43:40.341" level="INFO">${EmiratesId} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.339" endtime="20220422 06:43:40.341"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${EmiratesId}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<msg timestamp="20220422 06:08:49.983" level="INFO">${EmiratesId} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.982" endtime="20220422 06:08:49.983"/>
+<msg timestamp="20220422 06:43:40.341" level="INFO">${EmiratesId} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.341" endtime="20220422 06:43:40.342"/>
 </kw>
 <kw name="Set Variable" library="BuiltIn">
 <var>${First_Name}</var>
 <arg>${testData['First_Name']}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.985" level="INFO">${First_Name} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.983" endtime="20220422 06:08:49.985"/>
+<msg timestamp="20220422 06:43:40.344" level="INFO">${First_Name} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.342" endtime="20220422 06:43:40.344"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${First_Name}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<msg timestamp="20220422 06:08:49.987" level="INFO">${First_Name} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.985" endtime="20220422 06:08:49.987"/>
+<msg timestamp="20220422 06:43:40.346" level="INFO">${First_Name} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.344" endtime="20220422 06:43:40.346"/>
 </kw>
 <kw name="Set Variable" library="BuiltIn">
 <var>${Birth_Date}</var>
 <arg>${testData['Birth_Date']}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.989" level="INFO">${Birth_Date} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.987" endtime="20220422 06:08:49.989"/>
+<msg timestamp="20220422 06:43:40.349" level="INFO">${Birth_Date} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.346" endtime="20220422 06:43:40.349"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${Birth_Date}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<msg timestamp="20220422 06:08:49.990" level="INFO">${Birth_Date} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.989" endtime="20220422 06:08:49.990"/>
+<msg timestamp="20220422 06:43:40.349" level="INFO">${Birth_Date} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.349" endtime="20220422 06:43:40.349"/>
 </kw>
 <kw name="Set Variable" library="BuiltIn">
 <var>${Expiry_Date}</var>
 <arg>${testData['Expiry_Date']}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.992" level="INFO">${Expiry_Date} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.990" endtime="20220422 06:08:49.992"/>
+<msg timestamp="20220422 06:43:40.352" level="INFO">${Expiry_Date} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.350" endtime="20220422 06:43:40.352"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${Expiry_Date}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<msg timestamp="20220422 06:08:49.993" level="INFO">${Expiry_Date} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.992" endtime="20220422 06:08:49.993"/>
+<msg timestamp="20220422 06:43:40.353" level="INFO">${Expiry_Date} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.352" endtime="20220422 06:43:40.353"/>
 </kw>
 <kw name="Set Variable" library="BuiltIn">
 <var>${Full_Address}</var>
 <arg>${testData['Full_Address']}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<msg timestamp="20220422 06:08:49.996" level="INFO">${Full_Address} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.994" endtime="20220422 06:08:49.996"/>
+<msg timestamp="20220422 06:43:40.355" level="INFO">${Full_Address} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.353" endtime="20220422 06:43:40.355"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${Full_Address}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<msg timestamp="20220422 06:08:49.997" level="INFO">${Full_Address} = </msg>
-<status status="PASS" starttime="20220422 06:08:49.996" endtime="20220422 06:08:49.997"/>
+<msg timestamp="20220422 06:43:40.356" level="INFO">${Full_Address} = </msg>
+<status status="PASS" starttime="20220422 06:43:40.355" endtime="20220422 06:43:40.356"/>
 </kw>
-<status status="PASS" starttime="20220422 06:08:49.961" endtime="20220422 06:08:49.997"/>
+<status status="PASS" starttime="20220422 06:43:40.320" endtime="20220422 06:43:40.356"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="PASS" starttime="20220422 06:08:49.998" endtime="20220422 06:08:49.998"/>
+<status status="PASS" starttime="20220422 06:43:40.356" endtime="20220422 06:43:40.356"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
@@ -202,36 +202,36 @@
 <arg>${url}</arg>
 <arg>options=add_extension("./lhobafahddgcelffkeicbaginigeejlf.crx")</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="PASS" starttime="20220422 06:08:49.999" endtime="20220422 06:08:49.999"/>
+<status status="PASS" starttime="20220422 06:43:40.357" endtime="20220422 06:43:40.358"/>
 </kw>
 <kw name="Open Browser" library="RPA.Browser.Selenium">
 <arg>${url}</arg>
 <arg>chrome</arg>
 <arg>options=add_argument("headless"); add_argument("--disable-infobars"); add_argument("--disable-dev-shm-usage"); add_argument("--no-sandbox"); add_argument("--remote-debugging-port=9222");add_argument('--ignore-ssl-errors=yes');add_argument('--ignore-certificate-errors')</arg>
 <doc>Opens a new browser instance to the optional ``url``.</doc>
-<msg timestamp="20220422 06:08:50.000" level="INFO">Opening browser 'chrome' to base url 'https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002'.</msg>
-<status status="PASS" starttime="20220422 06:08:49.999" endtime="20220422 06:09:01.891"/>
+<msg timestamp="20220422 06:43:40.358" level="INFO">Opening browser 'chrome' to base url 'https://shop.du.ae/en/personal/Mobile-phones/axon-10-pro-5g-p-COM-HS-ZTE-002'.</msg>
+<status status="PASS" starttime="20220422 06:43:40.358" endtime="20220422 06:43:51.046"/>
 </kw>
 <kw name="Maximize Browser Window" library="RPA.Browser.Selenium">
 <doc>Maximizes current browser window.</doc>
-<status status="PASS" starttime="20220422 06:09:01.892" endtime="20220422 06:09:02.003"/>
+<status status="PASS" starttime="20220422 06:43:51.046" endtime="20220422 06:43:51.185"/>
 </kw>
 <kw name="Delete All Cookies" library="RPA.Browser.Selenium">
 <doc>Deletes all cookies.</doc>
-<status status="PASS" starttime="20220422 06:09:02.004" endtime="20220422 06:09:03.592"/>
+<status status="PASS" starttime="20220422 06:43:51.185" endtime="20220422 06:43:51.563"/>
 </kw>
 <kw name="Delete All Sessions" library="RequestsLibrary">
 <doc>Removes all the session objects</doc>
-<msg timestamp="20220422 06:09:03.593" level="INFO">Delete All Sessions</msg>
-<status status="PASS" starttime="20220422 06:09:03.593" endtime="20220422 06:09:03.593"/>
+<msg timestamp="20220422 06:43:51.564" level="INFO">Delete All Sessions</msg>
+<status status="PASS" starttime="20220422 06:43:51.563" endtime="20220422 06:43:51.564"/>
 </kw>
 <kw name="Capture Page Screenshot" library="RPA.Browser.Selenium">
 <arg>${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-Home_Screen.png</arg>
 <doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
-<msg timestamp="20220422 06:09:03.711" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="../../../../../robot/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result/%5B%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-Home_Screen.png"&gt;&lt;img src="../../../../../robot/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result/%5B%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-Home_Screen.png" width="800px"&gt;&lt;/a&gt;</msg>
-<status status="PASS" starttime="20220422 06:09:03.594" endtime="20220422 06:09:03.711"/>
+<msg timestamp="20220422 06:43:51.682" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="../../../../../robot/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result/%5B%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-Home_Screen.png"&gt;&lt;img src="../../../../../robot/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result/%5B%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-Home_Screen.png" width="800px"&gt;&lt;/a&gt;</msg>
+<status status="PASS" starttime="20220422 06:43:51.564" endtime="20220422 06:43:51.682"/>
 </kw>
-<status status="PASS" starttime="20220422 06:08:49.998" endtime="20220422 06:09:03.711"/>
+<status status="PASS" starttime="20220422 06:43:40.357" endtime="20220422 06:43:51.682"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
@@ -245,60 +245,60 @@
 <arg>${product_name}</arg>
 <arg>30s</arg>
 <doc>Waits until ``text`` appears on the current page.</doc>
-<status status="PASS" starttime="20220422 06:09:03.713" endtime="20220422 06:09:03.734"/>
+<status status="PASS" starttime="20220422 06:43:51.684" endtime="20220422 06:43:51.704"/>
 </kw>
-<msg timestamp="20220422 06:09:03.734" level="INFO">${product_status} = True</msg>
-<status status="PASS" starttime="20220422 06:09:03.712" endtime="20220422 06:09:03.734"/>
+<msg timestamp="20220422 06:43:51.704" level="INFO">${product_status} = True</msg>
+<status status="PASS" starttime="20220422 06:43:51.684" endtime="20220422 06:43:51.704"/>
 </kw>
 <if>
 <branch type="IF" condition="${product_status}">
 <kw name="Capture Page Screenshot" library="RPA.Browser.Selenium">
 <arg>${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-ESHOP-${product_name}.png</arg>
 <doc>Takes a screenshot of the current page and embeds it into a log file.</doc>
-<msg timestamp="20220422 06:09:03.880" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="../../../../../robot/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result/%5B%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-AXON%2010%20PRO%205G.png"&gt;&lt;img src="../../../../../robot/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result/%5B%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-AXON%2010%20PRO%205G.png" width="800px"&gt;&lt;/a&gt;</msg>
-<status status="PASS" starttime="20220422 06:09:03.735" endtime="20220422 06:09:03.880"/>
+<msg timestamp="20220422 06:43:51.837" level="INFO" html="true">&lt;/td&gt;&lt;/tr&gt;&lt;tr&gt;&lt;td colspan="3"&gt;&lt;a href="../../../../../robot/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result/%5B%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-AXON%2010%20PRO%205G.png"&gt;&lt;img src="../../../../../robot/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result/%5B%27ESHOP%20Production%20Regression%20Suite%27%5D-ESHOP-AXON%2010%20PRO%205G.png" width="800px"&gt;&lt;/a&gt;</msg>
+<status status="PASS" starttime="20220422 06:43:51.705" endtime="20220422 06:43:51.837"/>
 </kw>
 <kw name="Log" library="BuiltIn">
 <arg>${product_name} found.</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220422 06:09:03.881" level="INFO">AXON 10 PRO 5G found.</msg>
-<status status="PASS" starttime="20220422 06:09:03.880" endtime="20220422 06:09:03.881"/>
+<msg timestamp="20220422 06:43:51.838" level="INFO">AXON 10 PRO 5G found.</msg>
+<status status="PASS" starttime="20220422 06:43:51.838" endtime="20220422 06:43:51.838"/>
 </kw>
-<status status="PASS" starttime="20220422 06:09:03.734" endtime="20220422 06:09:03.881"/>
+<status status="PASS" starttime="20220422 06:43:51.705" endtime="20220422 06:43:51.838"/>
 </branch>
 <branch type="ELSE">
 <kw name="Log" library="BuiltIn">
 <arg>${product_name} not found.</arg>
 <doc>Logs the given message with the given level.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:03.881" endtime="20220422 06:09:03.881"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.839" endtime="20220422 06:43:51.839"/>
 </kw>
 <kw name="Fail" library="BuiltIn">
 <doc>Fails the test with the given message and optionally alters its tags.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:03.882" endtime="20220422 06:09:03.882"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.839" endtime="20220422 06:43:51.839"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:03.881" endtime="20220422 06:09:03.882"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.838" endtime="20220422 06:43:51.839"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:03.734" endtime="20220422 06:09:03.882"/>
+<status status="PASS" starttime="20220422 06:43:51.705" endtime="20220422 06:43:51.839"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:03.712" endtime="20220422 06:09:03.882"/>
+<status status="PASS" starttime="20220422 06:43:51.683" endtime="20220422 06:43:51.840"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
 <kw name="Close All Browsers" library="RPA.Browser.Selenium">
 <doc>Closes all open browsers and resets the browser cache.</doc>
-<status status="PASS" starttime="20220422 06:09:03.884" endtime="20220422 06:09:03.965"/>
+<status status="PASS" starttime="20220422 06:43:51.841" endtime="20220422 06:43:51.909"/>
 </kw>
-<status status="PASS" starttime="20220422 06:09:03.882" endtime="20220422 06:09:03.965"/>
+<status status="PASS" starttime="20220422 06:43:51.840" endtime="20220422 06:43:51.910"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="PASS" starttime="20220422 06:09:03.966" endtime="20220422 06:09:03.966"/>
+<status status="PASS" starttime="20220422 06:43:51.910" endtime="20220422 06:43:51.910"/>
 </kw>
-<status status="PASS" starttime="20220422 06:08:49.956" endtime="20220422 06:09:03.967"/>
+<status status="PASS" starttime="20220422 06:43:40.315" endtime="20220422 06:43:51.911"/>
 </branch>
-<status status="PASS" starttime="20220422 06:08:49.952" endtime="20220422 06:09:03.967"/>
+<status status="PASS" starttime="20220422 06:43:40.310" endtime="20220422 06:43:51.911"/>
 </if>
-<status status="PASS" starttime="20220422 06:08:49.952" endtime="20220422 06:09:03.967"/>
+<status status="PASS" starttime="20220422 06:43:40.310" endtime="20220422 06:43:51.911"/>
 </iter>
 <iter>
 <var name="${i}">1</var>
@@ -308,42 +308,42 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:03.972" endtime="20220422 06:09:03.972"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.916" endtime="20220422 06:43:51.916"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:03.973" endtime="20220422 06:09:03.973"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.916" endtime="20220422 06:43:51.916"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:03.973" endtime="20220422 06:09:03.973"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.916" endtime="20220422 06:43:51.917"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:03.974" endtime="20220422 06:09:03.974"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.917" endtime="20220422 06:43:51.917"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:03.974" endtime="20220422 06:09:03.974"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.917" endtime="20220422 06:43:51.917"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:03.974" endtime="20220422 06:09:03.974"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.917" endtime="20220422 06:43:51.917"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:03.974" endtime="20220422 06:09:03.974"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.917" endtime="20220422 06:43:51.918"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:03.974" endtime="20220422 06:09:03.975"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.918" endtime="20220422 06:43:51.918"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:03.972" endtime="20220422 06:09:03.975"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.915" endtime="20220422 06:43:51.918"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:03.967" endtime="20220422 06:09:03.975"/>
+<status status="PASS" starttime="20220422 06:43:51.911" endtime="20220422 06:43:51.918"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:03.967" endtime="20220422 06:09:03.975"/>
+<status status="PASS" starttime="20220422 06:43:51.911" endtime="20220422 06:43:51.918"/>
 </iter>
 <iter>
 <var name="${i}">2</var>
@@ -353,42 +353,42 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:03.980" endtime="20220422 06:09:03.980"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.925" endtime="20220422 06:43:51.926"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:03.981" endtime="20220422 06:09:03.981"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.926" endtime="20220422 06:43:51.926"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:03.981" endtime="20220422 06:09:03.981"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.927" endtime="20220422 06:43:51.927"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:03.982" endtime="20220422 06:09:03.982"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.927" endtime="20220422 06:43:51.927"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:03.983" endtime="20220422 06:09:03.983"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.928" endtime="20220422 06:43:51.928"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:03.984" endtime="20220422 06:09:03.984"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.930" endtime="20220422 06:43:51.930"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:03.984" endtime="20220422 06:09:03.984"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.933" endtime="20220422 06:43:51.933"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:03.985" endtime="20220422 06:09:03.985"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.935" endtime="20220422 06:43:51.936"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:03.980" endtime="20220422 06:09:03.985"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.925" endtime="20220422 06:43:51.936"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:03.975" endtime="20220422 06:09:03.985"/>
+<status status="PASS" starttime="20220422 06:43:51.918" endtime="20220422 06:43:51.936"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:03.975" endtime="20220422 06:09:03.985"/>
+<status status="PASS" starttime="20220422 06:43:51.918" endtime="20220422 06:43:51.936"/>
 </iter>
 <iter>
 <var name="${i}">3</var>
@@ -398,42 +398,42 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.000" endtime="20220422 06:09:04.000"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.943" endtime="20220422 06:43:51.943"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.001" endtime="20220422 06:09:04.001"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.944" endtime="20220422 06:43:51.944"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.001" endtime="20220422 06:09:04.002"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.944" endtime="20220422 06:43:51.944"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.002" endtime="20220422 06:09:04.002"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.944" endtime="20220422 06:43:51.944"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.002" endtime="20220422 06:09:04.002"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.945" endtime="20220422 06:43:51.945"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.003" endtime="20220422 06:09:04.003"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.945" endtime="20220422 06:43:51.945"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.004" endtime="20220422 06:09:04.004"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.945" endtime="20220422 06:43:51.945"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.004" endtime="20220422 06:09:04.005"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.945" endtime="20220422 06:43:51.946"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:03.999" endtime="20220422 06:09:04.005"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.943" endtime="20220422 06:43:51.946"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:03.986" endtime="20220422 06:09:04.005"/>
+<status status="PASS" starttime="20220422 06:43:51.936" endtime="20220422 06:43:51.946"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:03.986" endtime="20220422 06:09:04.005"/>
+<status status="PASS" starttime="20220422 06:43:51.936" endtime="20220422 06:43:51.946"/>
 </iter>
 <iter>
 <var name="${i}">4</var>
@@ -443,42 +443,42 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.012" endtime="20220422 06:09:04.012"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.952" endtime="20220422 06:43:51.952"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.013" endtime="20220422 06:09:04.013"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.952" endtime="20220422 06:43:51.952"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.013" endtime="20220422 06:09:04.013"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.952" endtime="20220422 06:43:51.952"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.014" endtime="20220422 06:09:04.014"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.953" endtime="20220422 06:43:51.953"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.014" endtime="20220422 06:09:04.014"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.953" endtime="20220422 06:43:51.954"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.014" endtime="20220422 06:09:04.014"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.954" endtime="20220422 06:43:51.954"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.015" endtime="20220422 06:09:04.015"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.954" endtime="20220422 06:43:51.954"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.015" endtime="20220422 06:09:04.015"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.954" endtime="20220422 06:43:51.954"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:04.012" endtime="20220422 06:09:04.015"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.951" endtime="20220422 06:43:51.954"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:04.005" endtime="20220422 06:09:04.015"/>
+<status status="PASS" starttime="20220422 06:43:51.947" endtime="20220422 06:43:51.954"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:04.005" endtime="20220422 06:09:04.015"/>
+<status status="PASS" starttime="20220422 06:43:51.947" endtime="20220422 06:43:51.954"/>
 </iter>
 <iter>
 <var name="${i}">5</var>
@@ -488,42 +488,42 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.021" endtime="20220422 06:09:04.021"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.959" endtime="20220422 06:43:51.959"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.021" endtime="20220422 06:09:04.021"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.960" endtime="20220422 06:43:51.960"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.021" endtime="20220422 06:09:04.021"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.960" endtime="20220422 06:43:51.960"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.021" endtime="20220422 06:09:04.021"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.960" endtime="20220422 06:43:51.960"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.022" endtime="20220422 06:09:04.022"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.961" endtime="20220422 06:43:51.961"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.022" endtime="20220422 06:09:04.022"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.961" endtime="20220422 06:43:51.961"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.022" endtime="20220422 06:09:04.022"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.961" endtime="20220422 06:43:51.961"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.023" endtime="20220422 06:09:04.023"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.961" endtime="20220422 06:43:51.961"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:04.020" endtime="20220422 06:09:04.023"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.959" endtime="20220422 06:43:51.961"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:04.015" endtime="20220422 06:09:04.023"/>
+<status status="PASS" starttime="20220422 06:43:51.955" endtime="20220422 06:43:51.961"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:04.015" endtime="20220422 06:09:04.023"/>
+<status status="PASS" starttime="20220422 06:43:51.955" endtime="20220422 06:43:51.961"/>
 </iter>
 <iter>
 <var name="${i}">6</var>
@@ -533,42 +533,42 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.029" endtime="20220422 06:09:04.029"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.970" endtime="20220422 06:43:51.970"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.030" endtime="20220422 06:09:04.030"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.970" endtime="20220422 06:43:51.971"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.030" endtime="20220422 06:09:04.030"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.971" endtime="20220422 06:43:51.971"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.030" endtime="20220422 06:09:04.031"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.972" endtime="20220422 06:43:51.972"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.031" endtime="20220422 06:09:04.031"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.972" endtime="20220422 06:43:51.972"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.031" endtime="20220422 06:09:04.031"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.973" endtime="20220422 06:43:51.973"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.031" endtime="20220422 06:09:04.031"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.973" endtime="20220422 06:43:51.973"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.032" endtime="20220422 06:09:04.032"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.974" endtime="20220422 06:43:51.974"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:04.028" endtime="20220422 06:09:04.032"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.969" endtime="20220422 06:43:51.974"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:04.023" endtime="20220422 06:09:04.032"/>
+<status status="PASS" starttime="20220422 06:43:51.962" endtime="20220422 06:43:51.974"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:04.023" endtime="20220422 06:09:04.032"/>
+<status status="PASS" starttime="20220422 06:43:51.962" endtime="20220422 06:43:51.974"/>
 </iter>
 <iter>
 <var name="${i}">7</var>
@@ -578,42 +578,42 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.041" endtime="20220422 06:09:04.041"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.980" endtime="20220422 06:43:51.981"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.042" endtime="20220422 06:09:04.042"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.981" endtime="20220422 06:43:51.981"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.042" endtime="20220422 06:09:04.042"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.981" endtime="20220422 06:43:51.981"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.043" endtime="20220422 06:09:04.043"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.982" endtime="20220422 06:43:51.982"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.043" endtime="20220422 06:09:04.043"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.982" endtime="20220422 06:43:51.982"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.043" endtime="20220422 06:09:04.044"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.982" endtime="20220422 06:43:51.982"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.044" endtime="20220422 06:09:04.044"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.982" endtime="20220422 06:43:51.982"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.044" endtime="20220422 06:09:04.044"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.982" endtime="20220422 06:43:51.983"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:04.041" endtime="20220422 06:09:04.044"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.980" endtime="20220422 06:43:51.983"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:04.032" endtime="20220422 06:09:04.045"/>
+<status status="PASS" starttime="20220422 06:43:51.974" endtime="20220422 06:43:51.983"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:04.032" endtime="20220422 06:09:04.045"/>
+<status status="PASS" starttime="20220422 06:43:51.974" endtime="20220422 06:43:51.983"/>
 </iter>
 <iter>
 <var name="${i}">8</var>
@@ -623,42 +623,42 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.049" endtime="20220422 06:09:04.050"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.987" endtime="20220422 06:43:51.988"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.050" endtime="20220422 06:09:04.051"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.988" endtime="20220422 06:43:51.988"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.051" endtime="20220422 06:09:04.051"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.989" endtime="20220422 06:43:51.989"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.051" endtime="20220422 06:09:04.051"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.989" endtime="20220422 06:43:51.989"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.052" endtime="20220422 06:09:04.052"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.989" endtime="20220422 06:43:51.989"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.052" endtime="20220422 06:09:04.052"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.989" endtime="20220422 06:43:51.989"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.052" endtime="20220422 06:09:04.052"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.989" endtime="20220422 06:43:51.990"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.052" endtime="20220422 06:09:04.052"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.990" endtime="20220422 06:43:51.990"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:04.049" endtime="20220422 06:09:04.052"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.987" endtime="20220422 06:43:51.990"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:04.045" endtime="20220422 06:09:04.052"/>
+<status status="PASS" starttime="20220422 06:43:51.983" endtime="20220422 06:43:51.990"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:04.045" endtime="20220422 06:09:04.053"/>
+<status status="PASS" starttime="20220422 06:43:51.983" endtime="20220422 06:43:51.990"/>
 </iter>
 <iter>
 <var name="${i}">9</var>
@@ -668,42 +668,42 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.058" endtime="20220422 06:09:04.058"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.995" endtime="20220422 06:43:51.995"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.058" endtime="20220422 06:09:04.059"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.995" endtime="20220422 06:43:51.995"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.059" endtime="20220422 06:09:04.060"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.995" endtime="20220422 06:43:51.995"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.060" endtime="20220422 06:09:04.060"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.996" endtime="20220422 06:43:51.996"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.061" endtime="20220422 06:09:04.061"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.996" endtime="20220422 06:43:51.996"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.061" endtime="20220422 06:09:04.061"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.997" endtime="20220422 06:43:51.997"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.061" endtime="20220422 06:09:04.061"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.997" endtime="20220422 06:43:51.997"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.061" endtime="20220422 06:09:04.061"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.998" endtime="20220422 06:43:51.998"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:04.058" endtime="20220422 06:09:04.062"/>
+<status status="NOT RUN" starttime="20220422 06:43:51.994" endtime="20220422 06:43:51.998"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:04.053" endtime="20220422 06:09:04.062"/>
+<status status="PASS" starttime="20220422 06:43:51.990" endtime="20220422 06:43:51.998"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:04.053" endtime="20220422 06:09:04.062"/>
+<status status="PASS" starttime="20220422 06:43:51.990" endtime="20220422 06:43:51.998"/>
 </iter>
 <iter>
 <var name="${i}">10</var>
@@ -713,42 +713,42 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.073" endtime="20220422 06:09:04.073"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.006" endtime="20220422 06:43:52.006"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.073" endtime="20220422 06:09:04.074"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.006" endtime="20220422 06:43:52.006"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.074" endtime="20220422 06:09:04.074"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.006" endtime="20220422 06:43:52.006"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.075" endtime="20220422 06:09:04.075"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.007" endtime="20220422 06:43:52.007"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.075" endtime="20220422 06:09:04.075"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.007" endtime="20220422 06:43:52.007"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.076" endtime="20220422 06:09:04.076"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.007" endtime="20220422 06:43:52.007"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.076" endtime="20220422 06:09:04.077"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.007" endtime="20220422 06:43:52.007"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.077" endtime="20220422 06:09:04.077"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.008" endtime="20220422 06:43:52.008"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:04.072" endtime="20220422 06:09:04.077"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.005" endtime="20220422 06:43:52.008"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:04.062" endtime="20220422 06:09:04.077"/>
+<status status="PASS" starttime="20220422 06:43:51.999" endtime="20220422 06:43:52.008"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:04.062" endtime="20220422 06:09:04.077"/>
+<status status="PASS" starttime="20220422 06:43:51.999" endtime="20220422 06:43:52.008"/>
 </iter>
 <iter>
 <var name="${i}">11</var>
@@ -758,55 +758,55 @@
 <var>${testData}</var>
 <arg>${dict[${i}]}</arg>
 <doc>Returns the given values which can then be assigned to a variables.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.084" endtime="20220422 06:09:04.084"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.014" endtime="20220422 06:43:52.014"/>
 </kw>
 <kw name="Set Global Variable" library="BuiltIn">
 <arg>${testData}</arg>
 <doc>Makes a variable available globally in all tests and suites.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.084" endtime="20220422 06:09:04.085"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.014" endtime="20220422 06:43:52.014"/>
 </kw>
 <kw name="ESHOP_VariableValueRetreive" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.085" endtime="20220422 06:09:04.085"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.014" endtime="20220422 06:43:52.015"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Start Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.086" endtime="20220422 06:09:04.086"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.015" endtime="20220422 06:43:52.015"/>
 </kw>
 <kw name="ESHOP_Open_Browser" library="ESHOP_Keyword">
 <arg>${Eshop_URL}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.086" endtime="20220422 06:09:04.086"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.015" endtime="20220422 06:43:52.015"/>
 </kw>
 <kw name="ESHOP_Check_Product" library="ESHOP_Keyword">
 <arg>${Product_Name}</arg>
-<status status="NOT RUN" starttime="20220422 06:09:04.087" endtime="20220422 06:09:04.087"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.015" endtime="20220422 06:43:52.015"/>
 </kw>
 <kw name="ESHOP_Close_Browsers" library="ESHOP_Keyword">
-<status status="NOT RUN" starttime="20220422 06:09:04.087" endtime="20220422 06:09:04.087"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.016" endtime="20220422 06:43:52.016"/>
 </kw>
 <kw name="Comment" library="BuiltIn">
 <arg>Stop Video Recording</arg>
 <doc>Displays the given messages in the log file as keyword arguments.</doc>
-<status status="NOT RUN" starttime="20220422 06:09:04.088" endtime="20220422 06:09:04.088"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.016" endtime="20220422 06:43:52.016"/>
 </kw>
-<status status="NOT RUN" starttime="20220422 06:09:04.083" endtime="20220422 06:09:04.088"/>
+<status status="NOT RUN" starttime="20220422 06:43:52.013" endtime="20220422 06:43:52.016"/>
 </branch>
-<status status="PASS" starttime="20220422 06:09:04.078" endtime="20220422 06:09:04.088"/>
+<status status="PASS" starttime="20220422 06:43:52.008" endtime="20220422 06:43:52.016"/>
 </if>
-<status status="PASS" starttime="20220422 06:09:04.078" endtime="20220422 06:09:04.093"/>
+<status status="PASS" starttime="20220422 06:43:52.008" endtime="20220422 06:43:52.017"/>
 </iter>
-<status status="PASS" starttime="20220422 06:08:49.952" endtime="20220422 06:09:04.093"/>
+<status status="PASS" starttime="20220422 06:43:40.309" endtime="20220422 06:43:52.017"/>
 </for>
 <kw name="Log" library="BuiltIn">
 <arg>/robot/RF_Codex/RF_Codex_Production_Stream/APP/ESHOP/Test_Case</arg>
 <doc>Logs the given message with the given level.</doc>
-<msg timestamp="20220422 06:09:04.094" level="INFO">/robot/RF_Codex/RF_Codex_Production_Stream/APP/ESHOP/Test_Case</msg>
-<status status="PASS" starttime="20220422 06:09:04.094" endtime="20220422 06:09:04.095"/>
+<msg timestamp="20220422 06:43:52.017" level="INFO">/robot/RF_Codex/RF_Codex_Production_Stream/APP/ESHOP/Test_Case</msg>
+<status status="PASS" starttime="20220422 06:43:52.017" endtime="20220422 06:43:52.017"/>
 </kw>
 <tag>QAD-11111</tag>
-<status status="PASS" starttime="20220422 06:08:49.944" endtime="20220422 06:09:04.095"/>
+<status status="PASS" starttime="20220422 06:43:40.301" endtime="20220422 06:43:52.018"/>
 </test>
-<status status="PASS" starttime="20220422 06:08:48.615" endtime="20220422 06:09:04.100"/>
+<status status="PASS" starttime="20220422 06:43:38.962" endtime="20220422 06:43:52.020"/>
 </suite>
 <statistics>
 <total>

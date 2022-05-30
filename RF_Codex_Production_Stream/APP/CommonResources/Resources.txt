@@ -1,34 +1,17 @@
 *** Variables ***
 ${TIMEOUT}        20
-${CRM_IMAGE_DIR}    ${CURDIR}/../CRM/Locators/CRM_Images
-${BSCS_EXCEL_FILE}    ${CURDIR}/../BSCS/Inputdata/BSCS_Test_Data.xlsx    # User Input sheet
-${BSCS_CSV_FILE}    ${CURDIR}/../BSCS/Inputdata/BSCS_Test_Data.csv    # User Input sheet
-${CRM_INPUTDATA}    ${CURDIR}/../CRM/Inputdata/CRM_TestData.csv    # User Input sheet
 ${SCREENSHOT_DIR}    ${CURDIR}/../../ResultFile/Result    #Screenshot Directory
-${BSCS_IMAGE_DIR}    ${CURDIR}/../BSCS/Locators/BSCS_Images
 ${ESHOP_IMAGE_DIR}    ${CURDIR}/../ESHOP/Locators/ESHOP_Images
-${DSP_EXCEL_FILE}    ${CURDIR}/../DSP/Inputdata/DSP_Test_Data.csv    # DSP Input data sheet
 ${ESHOP_EXCEL_FILE}    ${CURDIR}/../ESHOP/Config/ESHOP_Test_Data.csv    # Eshop input data sheet
-${SFA_EXCEL_FILE}    ${CURDIR}/../SFA/Inputdata/SFA_Test_Data.csv    # SFA input data sheet
-${EMAT_EXCEL_FILE}    ${CURDIR}/../BSCS/Locators/BSCS_Files/EMAT_Activation_Template.xls    # EMAT Activation
 ${SELFCARE_EXCEL_FILE}    ${CURDIR}/../Selfcare/Inputdata/Selfcare_TestData.csv    #Selfcare input data sheet
-${PGW_EXCEL_FILE}    ${CURDIR}/../PGW/Inputdata/PGW_TestData.csv
-${PGW_INPUTDATA}    ${CURDIR}/../PGW/Inputdata/PGW_TestData.csv
-${EAI_EXCEL_FILE}    ${CURDIR}/../EAI/Inputdata/EAI_TestData.csv
-${PGW_DoTransaction}    ${CURDIR}/../PGW/Inputdata/DoTransaction.xml
-${PGW_GetCustomersBalance}    ${CURDIR}/../PGW/Inputdata/GetCustomersBalance.xml
-${PGW_ReplaceCardDetails}    ${CURDIR}/../PGW/Inputdata/ReplaceCardDetails.xml
-${PGW_Response}    ${CURDIR}/../../ResultFile/Result
-${PGW_IMAGE_DIR}    ${CURDIR}/../PGW/Locators/PGW_Images
-${EAI_Response}    ${CURDIR}/../../ResultFile/Result
 ${Replication_CSV_FILE}    ${CURDIR}/../Replication_Validation/Inputdata/Replication_Test_Data.csv
 ${Replication_Img_Dir}    ${CURDIR}/../Replication_Validation/Locators/Replication_Images
-${CLMS_EXCEL_FILE}    ${CURDIR}/../CLMS/Inputdata/CLMS_Test_Data.csv    # CLMS Input data sheet
-${PGW_Replace_Card_Details}    ${CURDIR}/../PGW/Inputdata/Replace_Card_Details.xml
-${PGW_Do_Transaction2_API}    ${CURDIR}/../PGW/Inputdata/Do_Transaction2_API.xml
-${PGW_Do_Transaction2_Prepaid}    ${CURDIR}/../PGW/Inputdata/Do_Transaction2_Prepaid.xml
-${PGW_IVR_Payment}    ${CURDIR}/../PGW/Inputdata/IVR_Payment.xml
-${PGW_Validate_Regular_Transaction}    ${CURDIR}/../PGW/Inputdata/ValidateRegularTransaction.xml
 ${sample}         ${CURDIR}/../PGW/Inputdata/sample.xml
-${Testexeckey}    QAD-49677
 ${SELFCARE_CSV_FILE}    ${CURDIR}/../Selfcare/Config/Selfcare_TestData.csv    #Selfcare input data sheet
+#DB variables decleration and initialisation
+${DBTYPE}         psycopg2
+${DB_NAME}        RF_Codex
+${DB_USERNAME}    postgres
+${DB_PASSWORD}    htc2020
+${DB_URL}         localhost
+${PORT}           5432

@@ -1,5 +1,7 @@
 *** Settings ***
-Suite Setup
+Suite Setup       Open_DatabaseConnection
+Suite Teardown    Close_DatabaseConnection
+Test Setup        ESHOP_VariableSetup_Testcase
 Library           OperatingSystem    #Suite Teardown    XrayResultsUpload    #Test Teardown    TestStatusUpdateJson    #Suite Setup    ESHOP_MoveFileToArchive    #Suite Teardown    XrayResultsUpload    #Test Teardown    TestStatusUpdateJson
 Library           RPA.Browser.Selenium
 Library           ScreenCapLibrary
@@ -10,29 +12,14 @@ Resource          ../../CommonResources/Setup_TearDown.txt
 Resource          ../Keywords/ESHOP_Keyword.txt
 Resource          ../Config/Resources.txt
 Resource          ../Locators/Eshop_Locators.txt
+Library           DatabaseLibrary
 
 *** Test Cases ***
 ESHOP Latest ZTE AXON 10 PRO 5G
     [Tags]    QAD-11111
-    [Setup]
-    ${executionname}    Set Variable    @{TEST_TAGS}
-    Log    ${executionname}
-    @{dict}=    read csv file to associative    ${ESHOP_EXCEL_FILE}
-    ${dictlen}=    Get length    ${dict}
-    ${i}    Set Variable    1
-    FOR    ${i}    IN RANGE    ${dictlen}
-        IF    "${executionname}" == "${dict[${i}]['JiraID']}" and "${dict[${i}]['Flag']}" == "Y"
-        ${testData}    BuiltIn.Set Variable    ${dict[${i}]}
-        BuiltIn.Set Global Variable    ${testData}
-        ESHOP_VariableValueRetreive
-        Comment    Start Video Recording
-        ESHOP_Open_Browser    ${Eshop_URL}
-        ESHOP_Check_Product    ${Product_Name}
-        ESHOP_Close_Browsers
-        Comment    Stop Video Recording
-    END
-    END
-    log    ${CURDIR}
+    ESHOP_Open_Browser    ${Eshop_URL}
+    ESHOP_Check_Product    ${Product_Name}
+    ESHOP_Close_Browsers
 
 ESHOP Latest SAMSUNG Galaxy S21 Ultra 5G
     [Tags]    QAD-22222

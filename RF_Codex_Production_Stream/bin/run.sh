@@ -17,9 +17,9 @@ cd /robot/RF_Codex && git pull
 #cd /ngt-codex-qa/ngt-codex-qa && mvn gauge:execute -DspecsDir=specs/$CASES -Denv=$ENV
 
 echo the path is /robot/RF_Codex/RF_Codex_$ENV'_'Stream/APP/ESHOP/Test_Case
-echo the command is robot $EXE_RESULTS $SELECTED $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
+echo the command is robot $EXE_RESULTS_DIR $SELECTED_TAGS $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
 
-cd /robot/RF_Codex/RF_Codex_$ENV'_'Stream/APP/ESHOP/Test_Case && robot $EXE_RESULTS $SELECTED $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
+cd /robot/RF_Codex/RF_Codex_$ENV'_'Stream/APP/ESHOP/Test_Case && robot $EXE_RESULTS_DIR $SELECTED_TAGS $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
 
 #/ESHOP/Test_Case/ESHOP_Production_Suite.robot
 
@@ -37,4 +37,4 @@ sh /ngt-codex-qa/ngt-codex-qa/bin/prometrics.sh
 
 #docker run -v "C:\du\Projects\QMS\TAM\2022\Codex\RF_Codex":"/results" -e PUSH_GATE=http://192.168.0.16:9091 -e CASES=Suite -e EXE_RESULTS="--outputdir /results/RF_Codex/RF_Codex_Prod_Stream/ResultFile/Result" -e SELECTED="--include QAD-11111" -e ENV=Production -e METRIC_COMPL=ESHOP -e JOB_NAME=ESHOP_Production --name rf_test rf_codex:2.0
 
-#docker run -v "C:\nomi\GitHubLocalRepo":"/results" -e PUSH_GATE=http://192.168.0.16:9091 -e CASES=Regression -e EXE_RESULTS="--outputdir /results/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result" -e SELECTED="--include QAD-11111" -e ENV=Production -e METRIC_COMPL=ESHOP -e JOB_NAME=ESHOP_Production --name rf_test rf_codex:2.0
+#docker run -v "C:\nomi\GitHubLocalRepo":"/results" -e PUSH_GATE=http://192.168.0.16:9091 -e ENV=Production -e CASES=Regression -e SELECTED_TAGS="--include QAD-11111" -e EXE_RESULTS_DIR="--outputdir /results/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result"  -e METRIC_COMPL=ESHOP -e JOB_NAME=ESHOP_Production --name rf_test rf_codex:2.0

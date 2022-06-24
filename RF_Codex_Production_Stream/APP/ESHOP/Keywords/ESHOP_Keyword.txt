@@ -20,6 +20,8 @@ ESHOP_VariableSetup_Testcase
     Log    ${testtagname}
     ${query}    Query    select JiraID,TestcaseID,URL,ProductName,RatePlan,Email,Phone,EmiratesId,First_Name,Birth_Date,Expiry_Date,Full_Address from ESHOP_Production_Regression_Suite_Table where JiraID='${testtagname}'
     Log    ${query[0][0]}
+    ${jiravalue}    Set Variable    ${query[0][0]}
+    Set Test Variable    ${jiravalue}
     ${testcaseid}    Set Variable    ${query[0][1]}
     Set Test Variable    ${testcaseid}
     ${Eshop_URL}    Set Variable    ${query[0][2]}
@@ -28,28 +30,18 @@ ESHOP_VariableSetup_Testcase
     Set Test Variable    ${Product_Name}
     ${Rate_Plan}    Set Variable    ${query[0][4]}
     Set Test Variable    ${Rate_Plan}
-
-ESHOP_VariableValueRetreive
-    ${Eshop_URL}    Set Variable    ${testData['URL']}
-    Set Global Variable    ${Eshop_URL}
-    ${Product_Name}    Set Variable    ${testData['ProductName']}
-    Set Global Variable    ${Product_Name}
-    ${Rate_Plan}    Set Variable    ${testData['RatePlan']}
-    Set Global Variable    ${Rate_Plan}
-    ${Email}    Set Variable    ${testData['Email']}
-    Set Global Variable    ${Email}
-    ${Phone}    Set Variable    ${testData['Phone']}
-    Set Global Variable    ${Phone}
-    ${EmiratesId}    Set Variable    ${testData['EmiratesId']}
-    Set Global Variable    ${EmiratesId}
-    ${First_Name}    Set Variable    ${testData['First_Name']}
-    Set Global Variable    ${First_Name}
-    ${Birth_Date}    Set Variable    ${testData['Birth_Date']}
-    Set Global Variable    ${Birth_Date}
-    ${Expiry_Date}    Set Variable    ${testData['Expiry_Date']}
-    Set Global Variable    ${Expiry_Date}
-    ${Full_Address}    Set Variable    ${testData['Full_Address']}
-    Set Global Variable    ${Full_Address}
+    ${Email}    Set Variable    ${query[0][5]}
+    Set Test Variable    ${Email}
+    ${Phone}    Set Variable    ${query[0][6]}
+    Set Test Variable    ${Phone}
+    ${EmiratesId}    Set Variable    ${query[0][7]}
+    Set Test Variable    ${EmiratesId}
+    ${Birth_Date}    Set Variable    ${query[0][8]}
+    Set Test Variable    ${Birth_Date}
+    ${Expiry_Date}    Set Variable    ${query[0][9]}
+    Set Test Variable    ${Expiry_Date}
+    ${Full_Address}    Set Variable    ${query[0][10]}
+    Set Test Variable    ${Full_Address}
 
 ESHOP_Open_Browser
     [Arguments]    ${url}

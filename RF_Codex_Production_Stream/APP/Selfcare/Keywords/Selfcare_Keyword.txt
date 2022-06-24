@@ -21,28 +21,37 @@ Take _Screenshot
     ${dateTimeStampScreenshot}    Get Current Date    result_format=%d-%m-%Y-%H-%M-%S
     Capture Page Screenshot    ${SCREENSHOT_DIR}/${SUITE NAME.rsplit('.')}-${TEST NAME}-${dateTimeStampScreenshot}.png
 
-Selfcare_VariableValueRetreive
-    ${Username Value}    Set Variable    ${testData['UserName']}
-    Set Global Variable    ${Username Value}
-    ${Password Value}    Set Variable    ${testData['Password']}
-    Set Global Variable    ${Password Value}
-    ${Friend Name Value}    Set Variable    ${testData['Friend Name']}
-    Set Global Variable    ${Friend Name Value}
-    ${Friend Number Value}    Set Variable    ${testData['Friend Mobile Number']}
+Selfcare_VariableSetup_Testcase
+    ${testtagname}    Set Variable    @{TEST_TAGS}
+    Log    ${testtagname}
+    Set Test Variable    ${testtagname}
+    ${testcasename}    Set Variable    ${TEST NAME}
+    Set Test Variable    ${testcasename}
+    Log    ${testtagname}
+    ${query}    DatabaseLibrary.Query    select JiraID,TestcaseID,UserName,Password,Friend_Name,Friend_Mobile_Number,Credit_Card_Number,Name_on_Credit_Card,Credit_Card_Expiry,Credit_Card_CVV from Selfcare_Production_Regression_Suite_Table where JiraID='${testtagname}'
+    Log    ${query[0][0]}
+    ${jiravalue}    Set Variable    ${query[0][0]}
+    Set Test Variable    ${jiravalue}
+    ${testcaseid}    Set Variable    ${query[0][1]}
+    Set Test Variable    ${testcaseid}
+    ${Username Value}    Set Variable    ${query[0][2]}
+    Set Test Variable    ${Username Value}
+    ${Password Value}    Set Variable    ${query[0][3]}
+    Set Test Variable    ${Password Value}
+    ${Friend Name Value}    Set Variable    ${query[0][4]}
+    Set Test Variable    ${Friend Name Value}
+    ${Friend Number Value}    Set Variable    ${query[0][5]}
     ${Friend Number Value}=    Convert To String    ${Friend Number Value}
-    Set Global Variable    ${Friend Number Value}
-    ${Credit Card Number Value}    Set Variable    ${testData['Credit Card Number']}
-    Set Global Variable    ${Credit Card Number Value}
-    ${Name on Credit Card Value}    Set Variable    ${testData['Name on Credit Card']}
-    Set Global Variable    ${Name on Credit Card Value}
-    ${Credit Card Expiry Value}    Set Variable    ${testData['Credit Card Expiry']}
-    Set Global Variable    ${Credit Card Expiry Value}
-    ${Credit Card CVV Value}    Set Variable    ${testData['Credit Card CVV']}
-    Set Global Variable    ${Credit Card CVV Value}
-    ${Reference ID}    Set Variable    ${Your Reference ID}
-    Set Global Variable    ${Reference ID}
-    #${Newpassword}    Set Variable    ${testData['New PWD']}
-    #Set Global Variable    ${Newpassword}
+    Set Test Variable    ${Friend Number Value}
+    ${Credit Card Number}    Set Variable    ${query[0][6]}
+    Set Test Variable    ${Credit Card Number}
+    ${Name on Credit Card}    Set Variable    ${query[0][7]}
+    Set Test Variable    ${Name on Credit Card}
+    ${Credit Card Expiry}    Set Variable    ${query[0][8]}
+    Set Test Variable    ${Credit Card Expiry}
+    ${Credit Card CVV}    Set Variable    ${query[0][9]}
+    Set Test Variable    ${Credit Card CVV}
+    
 
 SELFCARE_DatabaseConnect
     Set Selenium Speed    0.5

@@ -32,11 +32,12 @@ DataBase Connectivity Check
 Open_DatabaseConnection
     Comment    key word to connect to DB and open the connection at suite level
     #Connect To Database    ${DBTYPE}    RF_Codex    postgres    htc2020    localhost    5432
-    Connect To Database    ${DB_TYPE}    ${DB_NAME}    ${DB_USERNAME}    ${DB_PASSWORD}    ${DB_URL}    ${PORT}
+    DatabaseLibrary.Connect To Database    ${DB_TYPE}    ${DB_NAME}    ${DB_USERNAME}    ${DB_PASSWORD}    ${DB_URL}    ${PORT}
+    Selfcare_ExecutorExcel_Setup
 
 Close_DatabaseConnection
     Comment    key word to disconnect to DB and open the connection at suite level
-    Disconnect From Database
+    DatabaseLibrary.Disconnect From Database
 
 ArchiveFile
     ${dateTimeStampResultFolder}    Get Current Date    result_format=%d-%m-%Y-%H-%M-%S

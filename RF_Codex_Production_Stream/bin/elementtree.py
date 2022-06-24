@@ -2,6 +2,7 @@ import os, csv
 from datetime import datetime
 from xml.etree import ElementTree as ET
 
+print("CURRENT WORKING DIR >>>"+os.getcwd())
 
 file_name = 'output.xml'
 full_file = os.path.abspath(os.path.join('/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result', file_name))
@@ -13,6 +14,7 @@ APP=os.environ.get('APP')
 JOB_NAME=os.environ.get('JOB_NAME')
 
 print(JOB_NAME)
+print(ENV)
 print(APP)
 
 
@@ -26,7 +28,7 @@ with open('verify.csv', 'w', newline='') as f:
         tc_tag = "tc_tag=" +'"'+ str(tag) +'"'
         #scena = "scenario=" + str(part)    
         scena = "scenario=" +'"'+ str(part) +'"'               
-        robotdefaultcontent="robot_qa"+'_'+str(APP)+str(JOB_NAME)
+        robotdefaultcontent="robot_qa"+'_'+str(APP)
         openbrace="{"
         closebrace="}"
         env = "env=" +'"'+ str(ENV) +'"'
@@ -59,3 +61,4 @@ with open('verify.csv', 'w', newline='') as f:
             #print(valuemilliseconds)
             L.append('{}{}{},{},{},{},{},{},{}{}{}'.format(robotdefaultcontent,openbrace,env,tc_tag,scena,step,result,specresult,scenarioresult,closebrace,valuemilliseconds))
         writer.writerow(['\n'.join(L)])
+       

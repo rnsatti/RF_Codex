@@ -1,5 +1,7 @@
 import os, csv
 
+print(os.getcwd())
+
 lines = []
 with open('verify.csv', 'r') as input:
     lines = input.readlines()

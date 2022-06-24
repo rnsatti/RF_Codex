@@ -2,7 +2,7 @@
 echo $(date)
 echo $CASES   #QAD-11111 ESHOP/Test_Case/ESHOP_Production_Suite.robot   : Which suite we have to execute (Regression or sanity) 
 echo $ENV     # Production, Preview, Regression
-echo $METRIC_COMPL # Application name (ESHOP, Selfcare)
+echo $APP # Application name (ESHOP, Selfcare)
 #echo b4 robot command run ******************************************************************************************code downloaded ****************************************************************************
 
 cd /robot/RF_Codex && git pull

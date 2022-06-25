@@ -14,6 +14,13 @@ if [ -f $FILE ]; then
     
     curl --insecure -v --data-binary "@/robot/RF_Codex/RF_Codex_Production_Stream/APP/ESHOP/Test_Case/output.csv" $PUSH_GATE/metrics/job/robot_$JOB_NAME
     
+    name=`uname -n`
+    timestamp=`date +%s`
+    result= true # this is the result of entire suite
+    echo "prometrics_exec_$APP{name=\"$name\",env=\"$ENV\", result=\"$result\"} $timestamp" | curl --insecure --data-binary @- $PUSH_GATE/metrics/job/robot_latest_$JOB_NAME
+
+    cp -r /RF_Codex/RF_Codex_Production_Stream/ResultFile/Result/* /root/robot_qa/HttpShared/$APP/$ENV/
+
 else
    echo "File $FILE does not exist."
 fi

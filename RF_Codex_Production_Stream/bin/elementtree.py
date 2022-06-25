@@ -32,6 +32,7 @@ with open('verify.csv', 'w', newline='') as f:
         openbrace="{"
         closebrace="}"
         env = "env=" +'"'+ str(ENV) +'"'
+        app = "app=" +'"'+ str(APP) +'"'
         search=".//kw[@library='ESHOP_Keyword']"
         L = [] 
         for a in d.findall(str(search)):
@@ -59,6 +60,6 @@ with open('verify.csv', 'w', newline='') as f:
             #print(diff_in_milli_secs)
             valuemilliseconds=spacedelimiter+str(diff_in_milli_secs)
             #print(valuemilliseconds)
-            L.append('{}{}{},{},{},{},{},{},{}{}{}'.format(robotdefaultcontent,openbrace,env,tc_tag,scena,step,result,specresult,scenarioresult,closebrace,valuemilliseconds))
+            L.append('{}{}{},{},{},{},{},{},{},{}{}{}'.format(robotdefaultcontent,openbrace,env,app,tc_tag,scena,step,result,specresult,scenarioresult,closebrace,valuemilliseconds))
         writer.writerow(['\n'.join(L)])
        

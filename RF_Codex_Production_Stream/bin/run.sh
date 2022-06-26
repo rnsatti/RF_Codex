@@ -16,10 +16,10 @@ cd /robot/RF_Codex && git pull
 #cd /ngt-codex-qa/ngt-codex-qa && mvn package -DskipTests 
 #cd /ngt-codex-qa/ngt-codex-qa && mvn gauge:execute -DspecsDir=specs/$CASES -Denv=$ENV
 
-echo the path is /robot/RF_Codex/RF_Codex_$ENV'_'Stream/APP/ESHOP/Test_Case
-echo the command is robot $EXE_RESULTS_DIR $SELECTED_TAGS $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
+echo the path is /robot/RF_Codex/RF_Codex_$ENV'_'Stream/APP/$APP/Test_Case
+echo the command is robot $EXE_RESULTS_DIR $SELECTED_TAGS $APP'_'$ENV'_'$CASES'_'Suite.robot
 
-cd /robot/RF_Codex/RF_Codex_$ENV'_'Stream/APP/ESHOP/Test_Case && robot $EXE_RESULTS_DIR $SELECTED_TAGS $METRIC_COMPL'_'$ENV'_'$CASES'_'Suite.robot
+cd /robot/RF_Codex/RF_Codex_$ENV'_'Stream/APP/$APP/Test_Case && robot $EXE_RESULTS_DIR $SELECTED_TAGS $APP'_'$ENV'_'$CASES'_'Suite.robot
 
 #/ESHOP/Test_Case/ESHOP_Production_Suite.robot
 

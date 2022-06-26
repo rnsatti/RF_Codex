@@ -14,6 +14,8 @@ if [ -f $FILE ]; then
     
     curl --insecure -v --data-binary "@/robot/RF_Codex/RF_Codex_Production_Stream/APP/ESHOP/Test_Case/output.csv" $PUSH_GATE/metrics/job/robot_$JOB_NAME
     
+    
+    #Below line of code is for the last execution run
     name=`uname -n`
     timestamp=`date +%s`
     result= true # this is the result of entire suite
@@ -25,4 +27,4 @@ else
    echo "File $FILE does not exist."
 fi
 
-#we have to change the working directory
+# Action to be taken A-1: We have to change the working directory

@@ -1,0 +1,17 @@
+*** Variables ***
+${TIMEOUT}        20
+${SCREENSHOT_DIR}    ${CURDIR}/../../ResultFile/Result    #Screenshot Directory
+${ESHOP_IMAGE_DIR}    ${CURDIR}/../ESHOP/Locators/ESHOP_Images
+${ESHOP_EXCEL_FILE}    ${CURDIR}/../ESHOP/Config/ESHOP_Test_Data.csv    # Eshop input data sheet
+${SELFCARE_EXCEL_FILE}    ${CURDIR}/../Selfcare/Inputdata/Selfcare_TestData.csv    #Selfcare input data sheet
+${Replication_CSV_FILE}    ${CURDIR}/../Replication_Validation/Inputdata/Replication_Test_Data.csv
+${Replication_Img_Dir}    ${CURDIR}/../Replication_Validation/Locators/Replication_Images
+${sample}         ${CURDIR}/../PGW/Inputdata/sample.xml
+${SELFCARE_CSV_FILE}    ${CURDIR}/../Selfcare/Config/Selfcare_TestData.csv    #Selfcare input data sheet
+#DB variables decleration and initialisation
+${DBTYPE}         psycopg2
+${DB_NAME}        RF_Codex
+${DB_USERNAME}    postgres
+${DB_PASSWORD}    htc2020
+${DB_URL}         10.250.46.162
+${PORT}           5432

@@ -1,0 +1,6 @@
+*** Variables ***
+${SCREENSHOT_DIR}    ${CURDIR}/../ResultFile/Result    #Screenshot Directory
+${ESHOP_EXCEL_FILE}    ${CURDIR}/../Config/ESHOP/ESHOP_Test_Data.csv    # Eshop input data sheet
+${REPORT FILE}    D:/RTC_Code_Repository/TAM-Framework/automation_framework/ResultFile/Result
+${SELFCARE_EXCEL_FILE}    ${CURDIR}/../Input_Data/Selfcare/Selfcare_TestData.csv    #Selfcare input data sheet
+

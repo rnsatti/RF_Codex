@@ -1,0 +1,9 @@
+Flag,JiraID,TestcaseID,UserName,Password,Friend Mobile Number,Friend Name,Credit Card Number,Name on Credit Card,Credit Card Expiry,Credit Card CVV
+Y,QAD-45357,Selfcare Consumer TC_Verify_AddCreditCard,971559533516,BlueRed@1234,971557876911,Mohan,4916521634634840,IBHRAHIM ALHAMMADI,825,803
+Y,QAD-46623,Selfcare TC_Verify_PostpaidRemoveCreditCard,971559533516,BlueRed@1234,,,4916521634634840,IBHRAHIM ALHAMMADI,825,803
+Y,QAD-46624,Selfcare TC_Verify_DeactivateAutoPayment,971559533516,BlueRed@1234,,,4916521634634840,IBHRAHIM ALHAMMADI,825,803
+Y,QAD-45359,Selfcare Consumer TC_Verify_AddFriend,971559533516,BlueRed@1234,971557876911,Mohan,4916521634634840,IBHRAHIM ALHAMMADI,825,803
+Y,QAD-41101,Selfcare Consumer TC_Verify_RemoveFriend,971559533516,BlueRed@1234,971557876911,Mohan,4916521634634840,IBHRAHIM ALHAMMADI,825,803
+Y,QAD-56626,Selfcare Login,Srinivas.podugu@du.ae,Home@Dubai34,,,,,825,
+Y,QAD-56627,Usage history by filter By All,Test@du.ae,050422@Pview,,,,,,
+Y,QAD-56628,Selfcare Username & Change Password,,,,,,,,

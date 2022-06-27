@@ -3,19 +3,22 @@ from datetime import datetime
 from xml.etree import ElementTree as ET
 
 print("CURRENT WORKING DIR >>>"+os.getcwd())
-
-file_name = 'output.xml'
-full_file = os.path.abspath(os.path.join('/RF_Codex/RF_Codex_Production_Stream/ResultFile/Result', file_name))
-dom = ET.parse(full_file)
-
-
 ENV=os.environ.get('ENV')
 APP=os.environ.get('APP')
 JOB_NAME=os.environ.get('JOB_NAME')
+FOLDER_PATH= '/RF_Codex/RF_Codex_'+str(ENV)+'_Stream/ResultFile/Result'
 
+print("the path for output file >>"+FOLDER_PATH)
 print(JOB_NAME)
 print(ENV)
 print(APP)
+
+
+file_name = 'output.xml'
+full_file = os.path.abspath(os.path.join(FOLDER_PATH, file_name))
+dom = ET.parse(full_file)
+
+
 
 
 with open('verify.csv', 'w', newline='') as f:

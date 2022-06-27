@@ -13,5 +13,5 @@ ${DBTYPE}         psycopg2
 ${DB_NAME}        RF_Codex
 ${DB_USERNAME}    postgres
 ${DB_PASSWORD}    htc2020
-${DB_URL}         10.250.46.162
+${DB_URL}         db
 ${PORT}           5432
